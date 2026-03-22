@@ -16,56 +16,56 @@ if (!$user) die("Aluno não encontrado.");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QUANTUM OS // Configuração</title>
+    <title>AEGIS // Modify Entity</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="liquid-desktop">
-        <div class="liquid-blob blob-1" style="top: -20%; left: -10%;"></div>
-        <div class="liquid-blob blob-3" style="bottom: -20%; right: -10%;"></div>
-    </div>
-    <div class="noise-overlay"></div>
+    <div class="crt-scanlines"></div>
 
-    <div class="desktop-environment" style="display: flex; align-items: center; justify-content: center; padding: 0;">
+    <div class="hud-wrapper" style="justify-content: center; align-items: center;">
         
-        <div class="spatial-window active" style="position: relative; width: 500px; transform: translateZ(0) scale(1); opacity: 1;">
-            <div class="window-bar">
-                <div class="window-controls">
-                    <span class="win-btn close-btn" style="background:rgba(255,255,255,0.2)"></span>
-                </div>
-                <span class="window-title mono">MODO DE RECONFIGURAÇÃO :: UID #<?= $user["id"] ?></span>
+        <div class="tactical-box" style="width: 100%; max-width: 600px;">
+            <div class="box-corner tl"></div><div class="box-corner tr"></div><div class="box-corner bl"></div><div class="box-corner br"></div>
+            
+            <div style="border-bottom: 1px solid var(--dark-green); padding-bottom: 10px; margin-bottom: 20px;">
+                <span class="text-dim">TARGET_UID: ><?= str_pad($user["id"], 3, '0', STR_PAD_LEFT) ?></span>
+                <h2 class="text-white" style="font-family: 'Rajdhani', sans-serif; font-size: 2rem;">// MODIFICAR DADOS DA ENTIDADE</h2>
             </div>
-            <div class="window-content">
-                
-                <form action="update.php" method="post" class="quantum-form">
-                    <input type="hidden" name="id" value="<?= $user["id"] ?>">
+            
+            <form action="update.php" method="post" class="aegis-form" style="max-width: 100%;">
+                <input type="hidden" name="id" value="<?= $user["id"] ?>">
 
-                    <div class="q-input-group">
-                        <label>IDENTIFICAÇÃO DO OPERADOR</label>
-                        <input type="text" name="name" value="<?= htmlspecialchars($user["name"]) ?>" required>
-                        <span class="input-focus-line"></span>
-                    </div>
-                    <div class="q-input-group">
-                        <label>CANAL DE COMUNICAÇÃO</label>
-                        <input type="email" name="email" value="<?= htmlspecialchars($user["email"]) ?>" required>
-                        <span class="input-focus-line"></span>
-                    </div>
-                    <div class="q-input-group">
-                        <label>VETOR DE ACESSO</label>
-                        <input type="text" name="document" value="<?= htmlspecialchars($user["document"]) ?>" required>
-                        <span class="input-focus-line"></span>
-                    </div>
-                    
-                    <div style="display: flex; gap: 15px; margin-top: 10px;">
-                        <a href="index.php" class="quantum-btn secondary" style="flex: 1; text-align: center; text-decoration: none; clip-path: none; border-radius: 8px;">CANCELAR</a>
-                        <button type="submit" class="quantum-btn primary" style="flex: 1; clip-path: none; border-radius: 8px;">SALVAR ALTERAÇÕES</button>
-                    </div>
-                </form>
-            </div>
+                <div class="hud-input-group">
+                    <label>> NOME_DO_OPERADOR</label>
+                    <input type="text" name="name" value="<?= htmlspecialchars($user["name"]) ?>" required autocomplete="off">
+                    <div class="crosshair ch-tl"></div><div class="crosshair ch-br"></div>
+                </div>
+
+                <div class="hud-input-group">
+                    <label>> ENDERECO_SINAL (E-MAIL)</label>
+                    <input type="email" name="email" value="<?= htmlspecialchars($user["email"]) ?>" required autocomplete="off">
+                    <div class="crosshair ch-tl"></div><div class="crosshair ch-br"></div>
+                </div>
+
+                <div class="hud-input-group">
+                    <label>> CHAVE_VETOR (CURSO)</label>
+                    <input type="text" name="document" value="<?= htmlspecialchars($user["document"]) ?>" required autocomplete="off">
+                    <div class="crosshair ch-tl"></div><div class="crosshair ch-br"></div>
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <a href="index.php" class="hud-submit-btn ghost" style="flex: 1; text-align: center; text-decoration: none;">
+                        << ABORTAR
+                    </a>
+                    <button type="submit" class="hud-submit-btn" style="flex: 1;">
+                        OVERRIDE_DATA >>
+                    </button>
+                </div>
+            </form>
         </div>
 
     </div>

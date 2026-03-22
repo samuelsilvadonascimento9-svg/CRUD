@@ -11,128 +11,157 @@ $users = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QUANTUM OS // Spatial Interface</title>
+    <title>AEGIS // Tactical HUD</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="liquid-desktop">
-        <div class="liquid-blob blob-1"></div>
-        <div class="liquid-blob blob-2"></div>
-        <div class="liquid-blob blob-3"></div>
-    </div>
-    <div class="noise-overlay"></div>
+    <div class="crt-scanlines"></div>
 
-    <div class="desktop-environment">
+    <div class="hud-wrapper">
         
-        <div class="spatial-window app-input active" id="window-input" style="left: 10%; top: 15%; z-index: 2;">
-            <div class="window-bar cursor-grab">
-                <div class="window-controls">
-                    <span class="win-btn close-btn"></span>
-                    <span class="win-btn minimize-btn"></span>
+        <header class="hud-header">
+            <div class="header-left">
+                <svg viewBox="0 0 100 100" width="40" height="40" class="spin-slow"><circle cx="50" cy="50" r="45" fill="none" stroke="var(--neon-green)" stroke-width="2" stroke-dasharray="10 5 20 5"/><circle cx="50" cy="50" r="30" fill="none" stroke="var(--neon-green)" stroke-width="4" stroke-dasharray="30 10"/></svg>
+                <div class="title-group">
+                    <h1>AEGIS <span class="text-white">COMMAND</span></h1>
+                    <span class="sub-title">SECURE CONNECTION ESTABLISHED // V 9.0</span>
                 </div>
-                <span class="window-title mono">TERMINAL DE ENTRADA v.4.0</span>
             </div>
-            <div class="window-content">
-                <form action="store.php" method="post" class="quantum-form">
-                    <div class="q-input-group">
-                        <label>IDENTIFICAÇÃO DO OPERADOR</label>
-                        <input type="text" name="name" required placeholder="_Digite o nome completo">
-                        <span class="input-focus-line"></span>
+            <div class="header-right">
+                <div class="live-clock" id="sys-clock">00:00:00:00</div>
+                <div class="status-box">
+                    <span class="blink-dot"></span> UPLINK SECURE
+                </div>
+            </div>
+        </header>
+
+        <div class="hud-grid">
+            
+            <aside class="side-panel">
+                <div class="tactical-box">
+                    <div class="box-corner tl"></div><div class="box-corner tr"></div><div class="box-corner bl"></div><div class="box-corner br"></div>
+                    <h3 class="box-title">SYS_RADAR</h3>
+                    <div class="radar-container">
+                        <div class="radar">
+                            <div class="sweep"></div>
+                        </div>
+                        <div class="target-blip"></div>
                     </div>
-                    <div class="q-input-group">
-                        <label>CANAL DE COMUNICAÇÃO (E-MAIL)</label>
-                        <input type="email" name="email" required placeholder="_Digite o e-mail corporativo">
-                        <span class="input-focus-line"></span>
-                    </div>
-                    <div class="q-input-group">
-                        <label>VETOR DE ACESSO (CURSO)</label>
-                        <input type="text" name="document" required placeholder="_Código do curso">
-                        <span class="input-focus-line"></span>
-                    </div>
-                    <button type="submit" class="quantum-btn primary">
-                        <span class="btn-txt">PROCESSAR DADOS</span>
-                        <div class="btn-glitch"></div>
+                </div>
+
+                <div class="tactical-box log-box">
+                    <div class="box-corner tl"></div><div class="box-corner tr"></div><div class="box-corner bl"></div><div class="box-corner br"></div>
+                    <h3 class="box-title">LIVE_TELEMETRY</h3>
+                    <div class="terminal-logs" id="terminal-logs">
+                        </div>
+                </div>
+            </aside>
+
+            <main class="main-panel">
+                
+                <div class="tabs-nav">
+                    <button class="tab-btn active" data-tab="tab-database">
+                        <span class="tab-icon">[ ]</span> MATRIZ DE DADOS
                     </button>
-                </form>
-            </div>
-        </div>
-
-        <div class="spatial-window app-data active" id="window-data" style="right: 5%; top: 10%; z-index: 3; width: 650px;">
-            <div class="window-bar cursor-grab">
-                <div class="window-controls">
-                    <span class="win-btn close-btn"></span>
-                    <span class="win-btn minimize-btn"></span>
+                    <button class="tab-btn" data-tab="tab-insert">
+                        <span class="tab-icon">[+]</span> NOVO UPLINK
+                    </button>
+                    <div class="tabs-line"></div>
                 </div>
-                <span class="window-title mono">VISUALIZADOR DE MATRIZ [Registros: <?= count($users) ?>]</span>
-            </div>
-            <div class="window-content scrollable">
-                <table class="quantum-table">
-                    <thead>
-                        <tr>
-                            <th>UID</th>
-                            <th>Operador / Contato</th>
-                            <th>Vetor</th>
-                            <th>Controle</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($users as $index => $user) : ?>
-                            <tr style="animation-delay: <?= $index * 0.05 ?>s">
-                                <td class="mono-id">#<?= str_pad($user["id"], 3, '0', STR_PAD_LEFT) ?></td>
-                                <td>
-                                    <div class="user-cell">
-                                        <span class="user-name"><?= htmlspecialchars($user["name"]) ?></span>
-                                        <span class="user-email mono"><?= htmlspecialchars($user["email"]) ?></span>
-                                    </div>
-                                </td>
-                                <td><span class="vector-badge"><?= htmlspecialchars($user["document"]) ?></span></td>
-                                <td>
-                                    <div class="control-btns">
-                                        <a href="edit.php?id=<?= $user["id"] ?>" class="q-icon-btn edit" title="Reconfigurar">
-                                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                        </a>
-                                        <button data-href="delete.php?id=<?= $user["id"] ?>" class="q-icon-btn delete custom-delete-trigger" title="Purgar">
-                                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
-    </div> <div class="dock-container">
-        <div class="quantum-dock">
-            <button class="dock-icon active" data-target="window-input" title="Terminal de Entrada">
-                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                <div class="dock-glow"></div>
-            </button>
-            <button class="dock-icon active" data-target="window-data" title="Visualizador de Matriz">
-                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                <div class="dock-glow"></div>
-            </button>
+                <div class="tab-content active" id="tab-database">
+                    <div class="tactical-box flex-box">
+                        <div class="box-corner tl"></div><div class="box-corner tr"></div><div class="box-corner bl"></div><div class="box-corner br"></div>
+                        
+                        <div class="table-stats">
+                            <span>TOTAL_ENTITIES: <?= str_pad(count($users), 4, '0', STR_PAD_LEFT) ?></span>
+                            <span>ENCRYPTION: AES-256</span>
+                        </div>
+
+                        <div class="table-scroll">
+                            <table class="aegis-table">
+                                <thead>
+                                    <tr>
+                                        <th>UID</th>
+                                        <th>IDENTIFICAÇÃO ALVO</th>
+                                        <th>SINAL (E-MAIL)</th>
+                                        <th>VETOR (CURSO)</th>
+                                        <th>COMANDOS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($users as $user) : ?>
+                                        <tr class="glitch-hover">
+                                            <td class="td-id">><?= str_pad($user["id"], 3, '0', STR_PAD_LEFT) ?></td>
+                                            <td class="text-white fw-bold"><?= htmlspecialchars($user["name"]) ?></td>
+                                            <td class="text-dim"><?= htmlspecialchars($user["email"]) ?></td>
+                                            <td><span class="hud-tag"><?= htmlspecialchars($user["document"]) ?></span></td>
+                                            <td>
+                                                <div class="btn-cluster">
+                                                    <a href="edit.php?id=<?= $user["id"] ?>" class="hud-icon-btn" title="Interceptar (Editar)">MOD</a>
+                                                    <a href="delete.php?id=<?= $user["id"] ?>" class="hud-icon-btn danger custom-delete-btn" title="Aniquilar (Excluir)">DEL</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-insert">
+                    <div class="tactical-box">
+                        <div class="box-corner tl"></div><div class="box-corner tr"></div><div class="box-corner bl"></div><div class="box-corner br"></div>
+                        
+                        <h2 class="form-title">// INICIALIZAR INSERÇÃO DE DADOS</h2>
+                        
+                        <form action="store.php" method="post" class="aegis-form">
+                            <div class="hud-input-group">
+                                <label>> NOME_DO_OPERADOR</label>
+                                <input type="text" name="name" required autocomplete="off">
+                                <div class="crosshair ch-tl"></div><div class="crosshair ch-br"></div>
+                            </div>
+
+                            <div class="hud-input-group">
+                                <label>> ENDERECO_SINAL (E-MAIL)</label>
+                                <input type="email" name="email" required autocomplete="off">
+                                <div class="crosshair ch-tl"></div><div class="crosshair ch-br"></div>
+                            </div>
+
+                            <div class="hud-input-group">
+                                <label>> CHAVE_VETOR (CURSO)</label>
+                                <input type="text" name="document" required autocomplete="off">
+                                <div class="crosshair ch-tl"></div><div class="crosshair ch-br"></div>
+                            </div>
+
+                            <button type="submit" class="hud-submit-btn">
+                                EXECUTE_UPLINK 
+                                <span class="arrow-icon">>></span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </main>
         </div>
     </div>
 
-    <div class="spatial-modal-overlay" id="deleteModal">
-        <div class="spatial-window modal-window">
-             <div class="window-bar box-danger">
-                <span class="window-title mono">ALERTA DE SISTEMA CRÍTICO</span>
-            </div>
-            <div class="window-content text-center">
-                <div class="danger-icon">⚠️</div>
-                <h3 class="modal-heading">Confirmar Purga de Dados?</h3>
-                <p class="modal-desc">Esta operação é irreversível e removerá permanentemente o registro da matriz quântica.</p>
-                <div class="modal-actions">
-                    <button class="quantum-btn secondary" id="btnCancelDelete">CANCELAR OPERAÇÃO</button>
-                    <button class="quantum-btn danger" id="btnConfirmDelete">CONFIRMAR PURGA</button>
-                </div>
+    <div class="hud-modal-overlay" id="deleteModal">
+        <div class="tactical-box modal-box alert-box">
+            <div class="box-corner tl"></div><div class="box-corner tr"></div><div class="box-corner bl"></div><div class="box-corner br"></div>
+            <div class="modal-warning-bar">!! WARNING !!</div>
+            
+            <h3 class="modal-title">PURGA DE SISTEMA SOLICITADA</h3>
+            <p class="modal-text">Você está prestes a aniquilar este registro do servidor central. Confirma a exclusão dos dados?</p>
+            
+            <div class="modal-actions">
+                <button class="hud-submit-btn ghost" id="btnCancelDelete">ABORT</button>
+                <button class="hud-submit-btn danger" id="btnConfirmDelete">CONFIRM_DEL</button>
             </div>
         </div>
     </div>

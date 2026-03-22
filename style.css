@@ -1,176 +1,191 @@
 /* =========================================
-   QUANTUM SPATIAL OS THEME
+   AEGIS TACTICAL HUD THEME
    ========================================= */
-:root {
-    --bg-space: #03050A;
-    --liquid-1: #1A1F35; /* Azul profundo */
-    --liquid-2: #3B2F4F; /* Roxo profundo */
-    --liquid-accent: #00F0FF; /* Ciano Neon */
+   :root {
+    --bg-dark: #020608;
+    --bg-panel: #061110;
     
-    --glass-surface: rgba(20, 25, 40, 0.75);
-    --glass-border: rgba(255, 255, 255, 0.15);
-    --glass-highlight: rgba(255, 255, 255, 0.3);
+    --neon-green: #00FF41;
+    --neon-dim: rgba(0, 255, 65, 0.2);
+    --dark-green: #008F11;
     
-    --text-primary: #FFFFFF;
-    --text-secondary: #8A9FB8;
+    --danger: #FF003C;
+    --danger-dim: rgba(255, 0, 60, 0.2);
     
-    --danger: #FF2E5B;
-
-    /* A mágica da profundidade 3D */
-    --spatial-shadow: 
-        0 30px 60px -12px rgba(0,0,0,0.8), /* Sombra de profundidade */
-        0 0 0 1px var(--glass-border), /* Borda física */
-        inset 0 1px 1px var(--glass-highlight); /* Reflexo de topo */
+    --text-white: #E0F8E8;
+    --text-dim: #7DA68B;
+    
+    --hud-border: 1px solid var(--neon-green);
+    --hud-glow: 0 0 10px var(--neon-dim);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background-color: var(--bg-space); color: var(--text-primary); font-family: 'Manrope', sans-serif; height: 100vh; overflow: hidden; position: relative; }
-.mono { font-family: 'Space Mono', monospace; letter-spacing: 1px; }
+body {
+    background-color: var(--bg-dark); color: var(--neon-green);
+    font-family: 'Share Tech Mono', monospace; /* Fonte de terminal */
+    height: 100vh; overflow: hidden; selection-background: var(--neon-green); selection-color: black;
+}
+.text-white { color: var(--text-white); }
+.text-dim { color: var(--text-dim); }
+.fw-bold { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.1rem; }
+
+/* EFEITO DE MONITOR CRT */
+.crt-scanlines {
+    position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    opacity: 0.15;
+}
 
 /* =========================================
-   FUNDO LÍQUIDO METÁLICO
+   LAYOUT & CABEÇALHO
    ========================================= */
-.liquid-desktop { position: fixed; inset: -20%; z-index: -2; overflow: hidden; background: var(--bg-space); filter: blur(120px); opacity: 0.6; }
-.liquid-blob { position: absolute; border-radius: 50%; animation: liquidMove 20s infinite alternate ease-in-out; }
-.blob-1 { width: 60vw; height: 60vw; background: var(--liquid-accent); top: 20%; left: 10%; opacity: 0.2; }
-.blob-2 { width: 70vw; height: 70vw; background: var(--liquid-1); bottom: -10%; right: -20%; animation-delay: -5s; }
-.blob-3 { width: 50vw; height: 50vw; background: var(--liquid-2); top: -30%; right: 20%; animation-delay: -10s; }
-.noise-overlay { position: fixed; inset: 0; z-index: -1; background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWjAAAAG1BMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAArdaaaAAAACHRSTlMABg8XHiQ2P08/9wEAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAAwSURBVDjLY2AYBcMIMIIxoxgYGIEwGAlD5Rjh8oRBhPAcIlyeE5TjBOU0wY0CAAA93QZBAf5l4gAAAABJRU5ErkJggg=='); opacity: 0.03; pointer-events: none; }
-@keyframes liquidMove { 0% { transform: translate(0,0) scale(1) rotate(0deg); } 100% { transform: translate(10%, 5%) scale(1.1) rotate(15deg); } }
+.hud-wrapper { max-width: 1500px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; padding: 1.5rem; }
+
+.hud-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    border-bottom: 2px solid var(--dark-green); padding-bottom: 1rem; margin-bottom: 1.5rem;
+}
+
+.header-left { display: flex; align-items: center; gap: 15px; }
+.title-group h1 { font-family: 'Rajdhani', sans-serif; font-size: 2.5rem; line-height: 1; letter-spacing: 2px; }
+.sub-title { font-size: 0.75rem; color: var(--text-dim); }
+.spin-slow { animation: spin 10s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+.header-right { text-align: right; }
+.live-clock { font-size: 1.5rem; text-shadow: var(--hud-glow); margin-bottom: 5px; }
+.status-box { display: inline-flex; align-items: center; gap: 8px; background: var(--neon-dim); padding: 4px 12px; border: var(--hud-border); font-size: 0.8rem; }
+.blink-dot { width: 8px; height: 8px; background: var(--neon-green); animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
 
 /* =========================================
-   AMBIENTE ESPACIAL & JANELAS
+   GRIDS E PAINÉIS TÁTICOS (Com Cantos Cortados)
    ========================================= */
-.desktop-environment { position: relative; width: 100%; height: 100vh; perspective: 2000px; padding: 2rem; }
+.hud-grid { display: grid; grid-template-columns: 300px 1fr; gap: 1.5rem; flex: 1; overflow: hidden; }
 
-/* A JANELA ESPACIAL FLUTUANTE */
-.spatial-window {
-    position: absolute;
-    background: var(--glass-surface);
-    /* Desfoque extremo para efeito de vidro grosso */
-    backdrop-filter: blur(50px) saturate(150%); -webkit-backdrop-filter: blur(50px) saturate(150%);
-    border-radius: 20px;
-    box-shadow: var(--spatial-shadow);
-    width: 450px; max-width: 90vw;
-    display: flex; flex-direction: column;
-    overflow: hidden;
-    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease, box-shadow 0.3s ease;
-    /* Estado inicial: fechado (escondido no fundo) */
-    opacity: 0; transform: translateZ(-200px) scale(0.9); pointer-events: none;
+.tactical-box {
+    position: relative; background: var(--bg-panel); border: 1px solid var(--dark-green);
+    padding: 1.5rem; height: 100%; display: flex; flex-direction: column;
+    /* Cantos cortados (Sci-Fi chamfer) */
+    clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
 }
+.flex-box { overflow: hidden; } /* Para a tabela rolar */
 
-/* Estado ativo: aberto e flutuando à frente */
-.spatial-window.active {
-    opacity: 1; transform: translateZ(0) scale(1); pointer-events: auto;
-}
-/* Quando clica na janela, ela vem para frente */
-.spatial-window:active, .spatial-window:focus-within { z-index: 10 !important; box-shadow: 0 40px 80px -12px rgba(0,0,0,0.9), var(--spatial-shadow); }
+/* Cruzetas nos cantos da caixa */
+.box-corner { position: absolute; width: 10px; height: 10px; border-color: var(--neon-green); border-style: solid; }
+.tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
+.tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+.bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+.br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
 
-/* Barra de Título da Janela */
-.window-bar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 20px; background: rgba(0,0,0,0.2);
-    border-bottom: 1px solid var(--glass-border); user-select: none;
-}
-.window-controls { display: flex; gap: 8px; }
-.win-btn { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.2); }
-.close-btn { background: #FF5F57; } .minimize-btn { background: #FEBC2E; }
-.window-title { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; }
-.window-content { padding: 24px; flex: 1; overflow-y: auto; }
-.scrollable { max-height: 70vh; }
-.cursor-grab { cursor: grab; } /* Sugere que pode arrastar (futuramente) */
+.box-title { font-size: 0.85rem; color: var(--text-white); border-bottom: 1px dashed var(--dark-green); padding-bottom: 5px; margin-bottom: 1rem; }
 
 /* =========================================
-   DOCK BAR (Barra de Tarefas)
+   O WIDGET DE RADAR E LOGS
    ========================================= */
-.dock-container {
-    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-    z-index: 100; perspective: 1000px;
-}
-.quantum-dock {
-    display: flex; gap: 15px; padding: 12px 15px;
-    background: rgba(20, 25, 40, 0.6);
-    backdrop-filter: blur(30px); border-radius: 24px;
-    border: 1px solid var(--glass-border);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
-    transform-style: preserve-3d;
-}
-.dock-icon {
-    position: relative; width: 50px; height: 50px; border-radius: 16px;
-    background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
-    color: var(--text-secondary); display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: 0.3s cubic-bezier(0.3, 1.5, 0.5, 1);
-}
-.dock-icon:hover { transform: translateY(-10px) scale(1.1); color: var(--liquid-accent); background: rgba(0, 240, 255, 0.1); }
-.dock-icon.active { color: var(--liquid-accent); background: rgba(0, 240, 255, 0.15); box-shadow: 0 0 20px rgba(0, 240, 255, 0.4); }
-.dock-glow { position: absolute; inset: 0; border-radius: 16px; box-shadow: 0 0 0px var(--liquid-accent); transition: 0.3s; opacity: 0; }
-.dock-icon.active .dock-glow { box-shadow: 0 0 30px var(--liquid-accent); opacity: 0.6; }
+.side-panel { display: flex; flex-direction: column; gap: 1.5rem; height: 100%; }
+
+.radar-container { position: relative; width: 150px; height: 150px; margin: 0 auto; border-radius: 50%; border: 2px solid var(--dark-green); background: repeating-radial-gradient(transparent, transparent 20px, var(--dark-green) 21px); }
+.radar-container::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: var(--dark-green); }
+.radar-container::before { content: ''; position: absolute; top: 0; left: 50%; width: 1px; height: 100%; background: var(--dark-green); }
+.radar { width: 100%; height: 100%; border-radius: 50%; position: absolute; animation: spin 4s linear infinite; }
+.sweep { width: 50%; height: 50%; top: 0; left: 50%; position: absolute; background: conic-gradient(from 0deg, transparent 70%, rgba(0, 255, 65, 0.6) 100%); transform-origin: bottom left; }
+.target-blip { position: absolute; width: 6px; height: 6px; background: var(--neon-green); border-radius: 50%; top: 30%; right: 30%; box-shadow: 0 0 10px var(--neon-green); animation: blink 4s infinite; }
+
+.log-box { flex: 1; }
+.terminal-logs { font-size: 0.75rem; color: var(--text-dim); line-height: 1.4; overflow: hidden; height: 100%; display: flex; flex-direction: column-reverse; }
 
 /* =========================================
-   FORMULÁRIO QUÂNTICO
+   SISTEMA DE ABAS (TABS)
    ========================================= */
-.quantum-form { display: flex; flex-direction: column; gap: 20px; }
-.q-input-group { position: relative; display: flex; flex-direction: column; gap: 8px; }
-.q-input-group label { font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); letter-spacing: 1px; }
-.q-input-group input {
-    background: rgba(0,0,0,0.3); border: none; border-bottom: 2px solid var(--glass-border);
-    padding: 12px 0; color: var(--text-primary); font-family: 'Space Mono', monospace;
+.main-panel { display: flex; flex-direction: column; gap: 1rem; height: 100%; overflow: hidden; }
+
+.tabs-nav { display: flex; gap: 10px; position: relative; }
+.tabs-line { position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: var(--dark-green); z-index: -1; }
+.tab-btn {
+    background: transparent; color: var(--text-dim); border: none; padding: 10px 20px;
+    font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; cursor: pointer;
+    border-bottom: 2px solid transparent; transition: 0.2s;
+}
+.tab-btn:hover { color: var(--neon-green); }
+.tab-btn.active { color: var(--neon-green); border-bottom-color: var(--neon-green); text-shadow: var(--hud-glow); background: linear-gradient(to top, var(--neon-dim), transparent); }
+
+.tab-content { display: none; height: 100%; animation: fadeScreen 0.3s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeScreen { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+/* =========================================
+   TABELA DE DADOS (Matriz)
+   ========================================= */
+.table-stats { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 1rem; padding: 5px; background: rgba(0,0,0,0.5); }
+.table-scroll { overflow-y: auto; flex: 1; }
+.aegis-table { width: 100%; border-collapse: collapse; }
+.aegis-table th { text-align: left; padding: 10px; font-size: 0.75rem; border-bottom: 1px solid var(--dark-green); color: var(--text-dim); }
+.aegis-table td { padding: 12px 10px; border-bottom: 1px dashed rgba(0, 143, 17, 0.3); font-size: 0.9rem; }
+.aegis-table tbody tr { transition: 0.1s; }
+.glitch-hover:hover { background: var(--neon-dim); }
+
+.td-id { color: var(--text-dim); }
+.hud-tag { border: 1px solid var(--dark-green); padding: 2px 8px; font-size: 0.75rem; color: var(--neon-green); }
+
+.btn-cluster { display: flex; gap: 5px; }
+.hud-icon-btn {
+    background: transparent; border: 1px solid var(--dark-green); color: var(--neon-green);
+    padding: 4px 8px; font-size: 0.75rem; text-decoration: none; cursor: pointer; transition: 0.2s;
+    clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+}
+.hud-icon-btn:hover { background: var(--neon-green); color: var(--bg-dark); }
+.hud-icon-btn.danger { border-color: var(--danger); color: var(--danger); }
+.hud-icon-btn.danger:hover { background: var(--danger); color: var(--text-white); box-shadow: 0 0 10px var(--danger); }
+
+/* =========================================
+   FORMULÁRIO DE ENTRADA
+   ========================================= */
+.form-title { font-size: 1.2rem; color: var(--text-white); margin-bottom: 2rem; border-left: 4px solid var(--neon-green); padding-left: 10px; }
+.aegis-form { max-width: 600px; display: flex; flex-direction: column; gap: 1.5rem; }
+
+.hud-input-group { position: relative; display: flex; flex-direction: column; gap: 5px; }
+.hud-input-group label { font-size: 0.8rem; color: var(--text-dim); }
+.hud-input-group input {
+    background: rgba(0, 255, 65, 0.02); border: 1px solid var(--dark-green);
+    color: var(--text-white); padding: 12px 15px; font-family: 'Share Tech Mono', monospace;
     font-size: 1rem; outline: none; transition: 0.3s;
 }
-.input-focus-line { position: absolute; bottom: 0; left: 0; width: 0%; height: 2px; background: var(--liquid-accent); transition: 0.4s ease; box-shadow: 0 0 15px var(--liquid-accent); }
-.q-input-group input:focus ~ .input-focus-line { width: 100%; }
-.q-input-group input::placeholder { color: rgba(255,255,255,0.2); }
+.hud-input-group input:focus { border-color: var(--neon-green); box-shadow: inset 0 0 15px var(--neon-dim); }
 
-.quantum-btn {
-    position: relative; padding: 16px; background: var(--liquid-accent); color: #000;
-    border: none; font-weight: 800; font-size: 0.9rem; letter-spacing: 2px;
-    clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%); /* Forma futurista */
-    cursor: pointer; transition: 0.3s; overflow: hidden; margin-top: 10px;
+/* Miras (Crosshairs) nos inputs */
+.crosshair { position: absolute; width: 8px; height: 8px; border-color: var(--neon-green); border-style: solid; pointer-events: none; transition: 0.3s; opacity: 0.5; }
+.ch-tl { top: 22px; left: 0; border-width: 2px 0 0 2px; }
+.ch-br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+.hud-input-group input:focus ~ .crosshair { opacity: 1; width: 12px; height: 12px; }
+
+/* Botão principal de submit */
+.hud-submit-btn {
+    background: var(--neon-dim); border: 1px solid var(--neon-green); color: var(--neon-green);
+    padding: 15px; font-family: 'Share Tech Mono', monospace; font-size: 1rem; font-weight: 700;
+    cursor: pointer; text-transform: uppercase; margin-top: 1rem;
+    clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+    transition: 0.2s; display: flex; justify-content: space-between; align-items: center;
 }
-.quantum-btn:hover { transform: scale(1.05); letter-spacing: 4px; background: white; box-shadow: 0 0 30px var(--liquid-accent); }
-.btn-glitch { position: absolute; inset: 0; background: rgba(255,255,255,0.5); transform: translateX(-100%); transition: 0.5s; }
-.quantum-btn:hover .btn-glitch { transform: translateX(100%); }
+.hud-submit-btn:hover { background: var(--neon-green); color: var(--bg-dark); box-shadow: var(--hud-glow); }
+.hud-submit-btn:active { transform: scale(0.98); }
+.hud-submit-btn.danger { background: var(--danger-dim); border-color: var(--danger); color: var(--danger); }
+.hud-submit-btn.danger:hover { background: var(--danger); color: var(--text-white); box-shadow: 0 0 15px var(--danger); }
+.hud-submit-btn.ghost { background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); }
+.hud-submit-btn.ghost:hover { background: rgba(255,255,255,0.1); color: var(--text-white); }
 
 /* =========================================
-   TABELA DE DADOS (Visualizador)
+   MODAL DE AVISO
    ========================================= */
-.quantum-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-.quantum-table th { text-align: left; padding: 10px 15px; font-size: 0.7rem; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 1px; }
-.quantum-table tbody tr { background: rgba(255,255,255,0.03); transition: 0.3s; animation: slideIn 0.6s backwards; border: 1px solid transparent; }
-.quantum-table tbody tr:hover { background: rgba(0, 240, 255, 0.05); border-color: rgba(0, 240, 255, 0.3); transform: scale(1.02) translateZ(20px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-.quantum-table td { padding: 12px 15px; font-size: 0.9rem; }
-.quantum-table td:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
-.quantum-table td:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+.hud-modal-overlay { position: fixed; inset: 0; background: rgba(2, 6, 8, 0.9); z-index: 1000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.2s; }
+.hud-modal-overlay.active { opacity: 1; pointer-events: auto; }
+.modal-box { max-width: 450px; width: 90%; transform: scale(0.9); transition: 0.3s; padding: 0 !important; }
+.hud-modal-overlay.active .modal-box { transform: scale(1); }
 
-.mono-id { color: var(--liquid-accent); font-family: 'Space Mono', monospace; }
-.user-cell { display: flex; flex-direction: column; }
-.user-name { font-weight: 700; }
-.user-email { font-size: 0.8rem; color: var(--text-secondary); }
-.vector-badge { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
-
-.control-btns { display: flex; gap: 10px; }
-.q-icon-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.1); color: var(--text-secondary); transition: 0.3s; border: none; cursor: pointer; }
-.q-icon-btn:hover { background: var(--liquid-accent); color: #000; box-shadow: 0 0 15px var(--liquid-accent); }
-.q-icon-btn.delete:hover { background: var(--danger); color: white; box-shadow: 0 0 15px var(--danger); }
-
-/* =========================================
-   MODAL ESPACIAL
-   ========================================= */
-.spatial-modal-overlay { position: fixed; inset: 0; z-index: 999; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: 0.3s; }
-.spatial-modal-overlay.active { opacity: 1; pointer-events: auto; }
-.modal-window { position: relative; transform: scale(0.9) translateZ(-100px) !important; opacity: 0 !important; transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-.spatial-modal-overlay.active .modal-window { transform: scale(1) translateZ(0px) !important; opacity: 1 !important; }
-.box-danger { background: rgba(255, 46, 91, 0.2); border-color: var(--danger); }
-.box-danger .window-title { color: var(--danger); }
-.text-center { text-align: center; }
-.danger-icon { font-size: 3rem; margin-bottom: 1rem; }
-.modal-heading { font-size: 1.5rem; margin-bottom: 0.5rem; }
-.modal-desc { color: var(--text-secondary); margin-bottom: 2rem; }
-.modal-actions { display: flex; gap: 15px; }
-.modal-actions .quantum-btn { flex: 1; clip-path: none; border-radius: 8px; margin-top: 0; }
-.quantum-btn.secondary { background: transparent; border: 1px solid var(--glass-border); color: var(--text-primary); }
-.quantum-btn.secondary:hover { background: rgba(255,255,255,0.1); }
-.quantum-btn.danger { background: var(--danger); color: white; }
-.quantum-btn.danger:hover { background: #D1244A; box-shadow: 0 0 20px var(--danger); }
-
-@keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+.alert-box { border-color: var(--danger); box-shadow: 0 0 30px var(--danger-dim); }
+.modal-warning-bar { background: var(--danger); color: var(--text-white); font-weight: 700; text-align: center; padding: 5px; animation: blink 1s infinite; }
+.modal-title { padding: 20px 20px 0; color: var(--danger); font-size: 1.2rem; }
+.modal-text { padding: 10px 20px 20px; color: var(--text-white); line-height: 1.5; font-size: 0.9rem; }
+.modal-actions { display: flex; gap: 10px; padding: 0 20px 20px; }
+.modal-actions button { flex: 1; }
