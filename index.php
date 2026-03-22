@@ -11,10 +11,10 @@ $users = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QUANTUM // Interface de Dados</title>
+    <title>NEXUS // Data Core</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -22,9 +22,9 @@ $users = $stmt->fetchAll();
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
-    <div class="quantum-bg">
-        <div class="glow-orb cyan-orb"></div>
-        <div class="glow-orb purple-orb"></div>
+    <div class="ambient-background">
+        <div class="aurora aurora-1"></div>
+        <div class="aurora aurora-2"></div>
         
         <div class="particle-system">
             <?php for($i = 1; $i <= 40; $i++): ?>
@@ -33,87 +33,80 @@ $users = $stmt->fetchAll();
         </div>
     </div>
 
-    <div class="layout-wrapper">
+    <div class="layout-wrapper fade-in">
         
-        <header class="cyber-header glass-panel fade-in-down">
+        <header class="top-nav">
             <div class="brand">
-                <div class="logo-spinner"></div>
-                <h1>QUANTUM<span class="highlight">_CORE</span></h1>
+                <div class="status-indicator"></div>
+                <h1>NEXUS<span class="text-dim">_DB</span></h1>
             </div>
-            <div class="sys-metrics">
-                <div class="metric">
-                    <span class="metric-label">STATUS</span>
-                    <span class="metric-value text-cyan blink">ONLINE</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">REGISTROS</span>
-                    <span class="metric-value text-purple"><?= str_pad(count($users), 3, '0', STR_PAD_LEFT) ?></span>
-                </div>
+            <div class="nav-metrics">
+                <span class="mono-text">REGISTROS: <?= str_pad(count($users), 4, '0', STR_PAD_LEFT) ?></span>
             </div>
         </header>
 
-        <div class="main-grid">
+        <div class="dashboard-grid">
             
-            <aside class="glass-panel input-station fade-in-left">
-                <div class="panel-heading">
+            <aside class="glass-card">
+                <div class="card-header">
                     <h2>NOVO PROTOCOLO</h2>
-                    <p>Insira os dados na matriz principal</p>
+                    <p class="text-dim" style="font-size: 0.9rem; margin-bottom: 2rem;">Criptografia e inserção de dados</p>
                 </div>
                 
-                <form action="store.php" method="post" class="futuristic-form">
-                    <div class="input-box">
-                        <input type="text" name="name" required autocomplete="off">
+                <form action="store.php" method="post" class="neo-form">
+                    <div class="form-group">
+                        <input type="text" name="name" required placeholder=" ">
                         <label>NOME DO OPERADOR</label>
-                        <span class="scanner-line"></span>
+                        <div class="focus-border"></div>
                     </div>
 
-                    <div class="input-box">
-                        <input type="email" name="email" required autocomplete="off">
+                    <div class="form-group">
+                        <input type="email" name="email" required placeholder=" ">
                         <label>ENDEREÇO DE E-MAIL</label>
-                        <span class="scanner-line"></span>
+                        <div class="focus-border"></div>
                     </div>
 
-                    <div class="input-box">
-                        <input type="text" name="document" required autocomplete="off">
+                    <div class="form-group">
+                        <input type="text" name="document" required placeholder=" ">
                         <label>CHAVE DO CURSO</label>
-                        <span class="scanner-line"></span>
+                        <div class="focus-border"></div>
                     </div>
 
-                    <button type="submit" class="magnetic-btn cyber-btn">
-                        <span>CADASTRAR OPERADOR</span>
-                        <div class="btn-flare"></div>
+                    <button type="submit" class="btn-glow hover-magnetic">
+                        INICIALIZAR CADASTRO
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                     </button>
                 </form>
             </aside>
 
-            <main class="glass-panel data-station fade-in-right">
-                <div class="table-container">
-                    <table class="perspective-table">
+            <main class="glass-card table-card">
+                <div class="table-scroll">
+                    <table class="premium-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>UID</th>
                                 <th>OPERADOR</th>
-                                <th>E-MAIL</th>
+                                <th>CONTATO</th>
                                 <th>CURSO</th>
-                                <th>TIMESTAMP</th>
                                 <th>AÇÕES</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($users as $index => $user) : ?>
-                                <tr class="data-row" style="animation-delay: <?= $index * 0.1 ?>s">
-                                    <td><span class="id-tag">#<?= str_pad($user["id"], 3, '0', STR_PAD_LEFT) ?></span></td>
-                                    <td class="operator-name"><?= htmlspecialchars($user["name"]) ?></td>
-                                    <td class="text-dimmed"><?= htmlspecialchars($user["email"]) ?></td>
-                                    <td><span class="course-badge"><?= htmlspecialchars($user["document"]) ?></span></td>
-                                    <td class="text-dimmed font-mono"><?= date("d.m.Y", strtotime($user["created_at"])) ?></td>
-                                    <td class="actions">
-                                        <a href="edit.php?id=<?= $user["id"] ?>" class="action-icon edit-icon" title="Modificar">
-                                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
-                                        </a>
-                                        <a href="delete.php?id=<?= $user["id"] ?>" class="action-icon delete-icon" title="Purgar" onclick="return confirm('AVISO: Excluir dados da matriz?')">
-                                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"></path></svg>
-                                        </a>
+                                <tr style="animation-delay: <?= $index * 0.05 ?>s">
+                                    <td class="mono-text text-accent">#<?= str_pad($user["id"], 3, '0', STR_PAD_LEFT) ?></td>
+                                    <td style="font-weight: 600;"><?= htmlspecialchars($user["name"]) ?></td>
+                                    <td class="text-dim"><?= htmlspecialchars($user["email"]) ?></td>
+                                    <td><span class="badge"><?= htmlspecialchars($user["document"]) ?></span></td>
+                                    <td>
+                                        <div class="action-group">
+                                            <a href="edit.php?id=<?= $user["id"] ?>" class="icon-btn edit-btn hover-magnetic" title="Modificar">
+                                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                            </a>
+                                            <a href="delete.php?id=<?= $user["id"] ?>" class="icon-btn delete-btn hover-magnetic custom-delete-btn" title="Purgar">
+                                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -125,40 +118,20 @@ $users = $stmt->fetchAll();
         </div>
     </div>
 
-    <script>
-        // Lógica do Cursor Customizado
-        const cursorDot = document.querySelector('.cursor-dot');
-        const cursorOutline = document.querySelector('.cursor-outline');
+    <div class="custom-modal-overlay" id="deleteModal">
+        <div class="glass-card modal-box">
+            <div class="modal-icon">
+                <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="2" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            </div>
+            <h3 class="modal-title">ALERTA DO SISTEMA</h3>
+            <p class="modal-text">Deseja realmente purgar este registro da matriz? Esta ação é irreversível.</p>
+            <div class="modal-actions">
+                <button class="btn-ghost hover-magnetic" id="btnCancelDelete">ABORTAR</button>
+                <button class="btn-glow danger-glow hover-magnetic" id="btnConfirmDelete">CONFIRMAR PURGO</button>
+            </div>
+        </div>
+    </div>
 
-        window.addEventListener('mousemove', function(e) {
-            const posX = e.clientX;
-            const posY = e.clientY;
-
-            cursorDot.style.left = `${posX}px`;
-            cursorDot.style.top = `${posY}px`;
-
-            // O outline segue com um leve atraso suave (efeito premium)
-            cursorOutline.animate({
-                left: `${posX}px`,
-                top: `${posY}px`
-            }, { duration: 500, fill: "forwards" });
-        });
-
-        // Botões Magnéticos
-        const magnetBtns = document.querySelectorAll('.magnetic-btn');
-        magnetBtns.forEach(btn => {
-            btn.addEventListener('mousemove', function(e) {
-                const position = btn.getBoundingClientRect();
-                const x = e.pageX - position.left - position.width / 2;
-                const y = e.pageY - position.top - position.height / 2;
-                
-                btn.style.transform = `translate(${x * 0.3}px, ${y * 0.5}px)`;
-            });
-            
-            btn.addEventListener('mouseout', function() {
-                btn.style.transform = 'translate(0px, 0px)';
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

@@ -1,379 +1,189 @@
 /* =========================================
-   CONFIGURAÇÕES GERAIS E CORES
+   VARIÁVEIS DE ALTO PADRÃO (Sci-Fi Premium)
    ========================================= */
    :root {
-    --bg-deep: #030508;
-    --glass-bg: rgba(10, 15, 26, 0.4);
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --bg-base: #02040a;
+    --glass-bg: rgba(255, 255, 255, 0.02);
+    --glass-border: rgba(255, 255, 255, 0.05);
+    --glass-highlight: rgba(255, 255, 255, 0.1);
     
-    --cyan: #00f3ff;
-    --cyan-dim: rgba(0, 243, 255, 0.2);
-    --purple: #b026ff;
-    --purple-dim: rgba(176, 38, 255, 0.2);
+    --accent-primary: #00f3ff;
+    --accent-glow: rgba(0, 243, 255, 0.3);
+    --accent-secondary: #b026ff;
     
-    --text-main: #f8fafc;
-    --text-muted: #8b9bb4;
+    --text-white: #ffffff;
+    --text-dim: #94a3b8;
+    --danger: #ef4444;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    margin: 0; padding: 0; box-sizing: border-box;
     font-family: 'Outfit', sans-serif;
-    /* Remove o cursor padrão do sistema em todos os elementos */
-    cursor: none !important; 
+    cursor: none !important;
 }
 
 body {
-    background-color: var(--bg-deep);
-    color: var(--text-main);
+    background-color: var(--bg-base);
+    color: var(--text-white);
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     overflow-x: hidden;
 }
 
+.mono-text { font-family: 'JetBrains Mono', monospace; }
+.text-dim { color: var(--text-dim); }
+.text-accent { color: var(--accent-primary); }
+
 /* =========================================
-   CURSOR HOLOGRÁFICO (O Diferencial)
+   CURSOR HOLOGRÁFICO
    ========================================= */
 .cursor-dot {
-    width: 6px;
-    height: 6px;
-    background-color: var(--cyan);
-    position: fixed;
-    top: 0; left: 0;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    z-index: 9999;
-    pointer-events: none;
-    box-shadow: 0 0 10px var(--cyan);
+    width: 6px; height: 6px; background: var(--text-white);
+    position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--accent-primary);
 }
 
 .cursor-outline {
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--cyan-dim);
-    position: fixed;
-    top: 0; left: 0;
+    width: 40px; height: 40px; border: 1px solid var(--glass-highlight);
+    position: fixed; border-radius: 50%; pointer-events: none; z-index: 9998;
     transform: translate(-50%, -50%);
-    border-radius: 50%;
-    z-index: 9998;
-    pointer-events: none;
-    transition: width 0.2s, height 0.2s, border-color 0.2s;
-    box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.1);
+    transition: width 0.2s, height 0.2s, border-color 0.2s, background 0.2s, left 0.1s ease-out, top 0.1s ease-out;
+    box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.05);
 }
 
-/* Quando passa por cima de botões/links, o cursor cresce */
+.hover-magnetic:hover ~ .cursor-outline,
+input:focus ~ .cursor-outline,
 a:hover ~ .cursor-outline,
-button:hover ~ .cursor-outline,
-.magnetic-btn:hover ~ .cursor-outline {
-    width: 60px;
-    height: 60px;
-    border-color: var(--cyan);
-    background-color: rgba(0, 243, 255, 0.05);
-}
-
-/* =========================================
-   FUNDO 3D & PARTÍCULAS EM ROTAÇÃO
-   ========================================= */
-.quantum-bg {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    overflow: hidden;
-    perspective: 800px;
-}
-
-.glow-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(150px);
-    opacity: 0.4;
-    animation: breathe 10s infinite alternate;
-}
-
-.cyan-orb { width: 60vw; height: 60vw; background: var(--cyan); top: -20%; left: -20%; }
-.purple-orb { width: 50vw; height: 50vw; background: var(--purple); bottom: -20%; right: -10%; animation-delay: -5s; }
-
-/* O Sistema de Partículas que você mandou na referência */
-.particle-system {
-    position: absolute;
-    top: 50%; left: 50%;
-    z-index: 0;
-    transform-style: preserve-3d;
-    animation: rotateGalaxy 30s linear infinite;
-}
-
-.particle {
-    display: block;
-    position: absolute;
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--cyan);
-    box-shadow: 0 0 15px var(--cyan);
-    opacity: 0;
-    /* A mágica do 3D spin da sua referência */
-    animation: particleSpin 3s ease-in-out infinite;
-}
-
-@keyframes particleSpin {
-    0% { opacity: 0; }
-    50% { opacity: 0.6; transform: translate3d(-3px, -3px, 570px); }
-    100% { opacity: 0; }
-}
-
-@keyframes rotateGalaxy {
-    0% { transform: rotateZ(0deg) rotateX(60deg); }
-    100% { transform: rotateZ(360deg) rotateX(60deg); }
-}
-@keyframes breathe {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.1); opacity: 0.6; }
-}
-
-/* =========================================
-   LAYOUT E GLASSMORPHISM
-   ========================================= */
-.layout-wrapper {
-    width: 100%;
-    max-width: 1400px;
-    padding: 2vw;
-    z-index: 1;
-}
-
-.glass-panel {
-    background: var(--glass-bg);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    border: 1px solid var(--glass-border);
-    border-radius: 24px;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
-}
-
-.main-grid {
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 30px;
-    margin-top: 30px;
-}
-
-@media (max-width: 1100px) {
-    .main-grid { grid-template-columns: 1fr; }
-}
-
-/* =========================================
-   CABEÇALHO
-   ========================================= */
-.cyber-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 40px;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.logo-spinner {
-    width: 25px; height: 25px;
-    border: 3px solid transparent;
-    border-top-color: var(--cyan);
-    border-left-color: var(--purple);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin { 100% { transform: rotate(360deg); } }
-
-h1 { font-size: 2rem; font-weight: 800; letter-spacing: 3px; }
-.highlight { color: var(--cyan); font-weight: 300; }
-
-.sys-metrics { display: flex; gap: 30px; }
-.metric { display: flex; flex-direction: column; text-align: right; }
-.metric-label { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 2px; }
-.metric-value { font-size: 1.2rem; font-weight: 800; font-family: 'Space Mono', monospace; }
-.text-cyan { color: var(--cyan); text-shadow: 0 0 10px var(--cyan-dim); }
-.text-purple { color: var(--purple); text-shadow: 0 0 10px var(--purple-dim); }
-.blink { animation: blinker 2s linear infinite; }
-@keyframes blinker { 50% { opacity: 0.3; } }
-
-/* =========================================
-   ENTRADA DE DADOS (O FORMULÁRIO)
-   ========================================= */
-.input-station { padding: 40px; }
-.panel-heading h2 { font-size: 1.4rem; font-weight: 600; letter-spacing: 1px; }
-.panel-heading p { color: var(--text-muted); font-size: 0.9rem; margin-top: 5px; margin-bottom: 35px; }
-
-.futuristic-form { display: flex; flex-direction: column; gap: 35px; }
-
-.input-box { position: relative; }
-.input-box input {
-    width: 100%;
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 1.1rem;
-    padding: 10px 0;
-    outline: none;
-}
-
-.scanner-line {
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 100%; height: 2px;
-    background: rgba(255,255,255,0.1);
-}
-
-.scanner-line::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 50%;
-    width: 0%; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-    transition: 0.4s ease;
-    transform: translateX(-50%);
-}
-
-.input-box label {
-    position: absolute;
-    left: 0; top: 10px;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    pointer-events: none;
-    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.input-box input:focus ~ label,
-.input-box input:valid ~ label {
-    top: -20px;
-    font-size: 0.7rem;
-    color: var(--cyan);
-}
-
-.input-box input:focus ~ .scanner-line::after,
-.input-box input:valid ~ .scanner-line::after {
-    width: 100%;
-    box-shadow: 0 0 15px var(--cyan);
-}
-
-/* BOTÃO MAGNÉTICO E CIBERNÉTICO */
-.cyber-btn {
-    position: relative;
+button:hover ~ .cursor-outline {
+    width: 60px; height: 60px; border-color: var(--accent-primary);
     background: rgba(0, 243, 255, 0.05);
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
-    padding: 18px;
-    font-size: 0.95rem;
-    font-weight: 800;
-    letter-spacing: 3px;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: 0.2s ease-out; /* Transição rápida para combinar com a física do JS */
 }
-
-.cyber-btn:hover {
-    background: var(--cyan);
-    color: var(--bg-deep);
-    box-shadow: 0 0 30px var(--cyan-dim);
-}
-
-.btn-flare {
-    position: absolute;
-    top: 0; left: -100%;
-    width: 50%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
-    transform: skewX(-25deg);
-    transition: 0.6s;
-}
-.cyber-btn:hover .btn-flare { left: 200%; }
 
 /* =========================================
-   TABELA 3D (PERSPECTIVA AVANÇADA)
+   FUNDO AURORA E PARTÍCULAS
    ========================================= */
-.data-station { padding: 40px; perspective: 1500px; }
+.ambient-background { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: var(--bg-base); }
+.aurora { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.35; animation: drift 15s infinite alternate ease-in-out; }
+.aurora-1 { width: 50vw; height: 50vw; background: var(--accent-primary); top: -20%; left: -10%; }
+.aurora-2 { width: 45vw; height: 45vw; background: var(--accent-secondary); bottom: -20%; right: -10%; animation-delay: -7s; }
 
-.table-container { overflow-x: auto; padding-bottom: 20px; }
+.particle-system { position: absolute; top: 50%; left: 50%; z-index: 0; transform-style: preserve-3d; animation: rotateGalaxy 30s linear infinite; }
+.particle { display: block; position: absolute; width: 4px; height: 4px; border-radius: 50%; background: var(--accent-primary); box-shadow: 0 0 10px var(--accent-primary); opacity: 0; animation: particleSpin 3s ease-in-out infinite; }
 
-.perspective-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 12px;
-    transform-style: preserve-3d;
+@keyframes drift { 100% { transform: translate(80px, -50px) scale(1.1); } }
+@keyframes particleSpin { 50% { opacity: 0.6; transform: translate3d(-3px, -3px, 570px); } 100% { opacity: 0; } }
+@keyframes rotateGalaxy { 100% { transform: rotateZ(360deg) rotateX(60deg); } }
+
+/* =========================================
+   LAYOUT & GLASS CARDS (Estáticos, para usabilidade)
+   ========================================= */
+.layout-wrapper { max-width: 1400px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
+.edit-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 2rem; position: relative; z-index: 1; }
+
+.glass-card {
+    background: var(--glass-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border); border-radius: 24px; padding: 2.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
-.perspective-table th {
-    text-align: left;
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    padding: 0 20px 15px;
+.top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 0 1rem; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.status-indicator { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; animation: pulse 2s infinite; }
+@keyframes pulse { 50% { opacity: 0.4; } }
+.brand h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; }
+.nav-metrics { font-size: 0.85rem; color: var(--accent-primary); background: rgba(0, 243, 255, 0.1); padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(0, 243, 255, 0.2); }
+
+.dashboard-grid { display: grid; grid-template-columns: 380px 1fr; gap: 2rem; }
+@media (max-width: 1024px) { .dashboard-grid { grid-template-columns: 1fr; } }
+
+.edit-card { width: 100%; max-width: 500px; }
+.card-header h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+.card-header p { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 2rem; }
+
+/* =========================================
+   FORMULÁRIOS
+   ========================================= */
+.neo-form { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1.5rem; }
+.form-group { position: relative; }
+.form-group input {
+    width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);
+    color: var(--text-white); font-size: 1rem; padding: 1.2rem 1rem 0.8rem;
+    border-radius: 12px; outline: none; transition: 0.3s;
 }
 
-.data-row {
-    background: rgba(255,255,255,0.02);
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    /* Animação de entrada de baixo para cima das referências Animate.css */
-    animation: fadeInUp 0.8s backwards;
+.focus-border { position: absolute; inset: 0; border-radius: 12px; pointer-events: none; border: 1px solid transparent; transition: 0.4s ease; }
+.form-group input:focus { background: rgba(0,0,0,0.4); }
+.form-group input:focus ~ .focus-border { border-color: var(--accent-primary); box-shadow: 0 0 15px rgba(0, 243, 255, 0.2) inset; }
+
+.form-group label {
+    position: absolute; left: 1rem; top: 1rem; color: var(--text-dim); font-size: 0.9rem; pointer-events: none; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.form-group input:focus ~ label, .form-group input:not(:placeholder-shown) ~ label {
+    top: -0.6rem; left: 0.8rem; font-size: 0.7rem; color: var(--accent-primary); background: var(--bg-base); padding: 0 0.4rem; border-radius: 4px;
 }
 
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translate3d(0, 40px, -50px) rotateX(-10deg); }
-    to { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0); }
+/* =========================================
+   BOTÕES GERAIS
+   ========================================= */
+.btn-glow {
+    display: flex; justify-content: center; align-items: center; gap: 10px;
+    background: var(--text-white); color: #000; border: none; padding: 1rem;
+    font-size: 0.9rem; font-weight: 700; border-radius: 12px; transition: 0.3s;
+    box-shadow: 0 0 20px rgba(255,255,255,0.1); cursor: none;
 }
+.btn-glow:hover { background: #e2e8f0; box-shadow: 0 8px 25px rgba(255,255,255,0.3); transform: translateY(-2px); }
 
-.data-row td {
-    padding: 18px 20px;
-    border-top: 1px solid var(--glass-border);
-    border-bottom: 1px solid var(--glass-border);
-    transition: 0.3s;
+.form-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+.btn-ghost {
+    display: flex; justify-content: center; align-items: center; gap: 10px;
+    background: transparent; color: var(--text-white); border: 1px solid var(--glass-border);
+    padding: 1rem; font-size: 0.9rem; font-weight: 600; border-radius: 12px; text-decoration: none; transition: 0.3s; cursor: none;
 }
+.btn-ghost:hover { background: rgba(255,255,255,0.05); border-color: var(--glass-highlight); }
 
-.data-row td:first-child { border-left: 1px solid var(--glass-border); border-radius: 12px 0 0 12px; }
-.data-row td:last-child { border-right: 1px solid var(--glass-border); border-radius: 0 12px 12px 0; }
+/* =========================================
+   TABELA LISTAGEM
+   ========================================= */
+.table-scroll { overflow-x: auto; padding-bottom: 1rem; }
+.premium-table { width: 100%; border-collapse: collapse; }
+.premium-table th { text-align: left; padding: 1rem; font-size: 0.75rem; color: var(--text-dim); letter-spacing: 1px; border-bottom: 1px solid var(--glass-border); }
+.premium-table tbody tr { transition: all 0.2s ease; animation: slideUp 0.6s backwards; }
+.premium-table td { padding: 1.2rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.95rem; }
+.premium-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+.badge { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; }
 
-/* O Hover 3D que salta na tela */
-.data-row:hover {
-    background: rgba(0, 243, 255, 0.05);
-    transform: translateZ(40px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+.action-group { display: flex; gap: 8px; }
+.icon-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.03); color: var(--text-dim); transition: 0.2s; text-decoration: none; border: 1px solid transparent; cursor: none; }
+.edit-btn:hover { background: rgba(0, 243, 255, 0.1); color: var(--accent-primary); border-color: rgba(0, 243, 255, 0.3); }
+.delete-btn:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
+
+/* =========================================
+   NOVO: MODAL DE AVISO (DELETAR)
+   ========================================= */
+.custom-modal-overlay {
+    position: fixed; inset: 0; background: rgba(2, 4, 10, 0.85);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    z-index: 10000; display: flex; justify-content: center; align-items: center;
+    opacity: 0; pointer-events: none; transition: all 0.3s ease;
 }
+.custom-modal-overlay.active { opacity: 1; pointer-events: auto; }
 
-.data-row:hover td {
-    border-color: var(--cyan-dim);
+.modal-box {
+    max-width: 420px; width: 90%; text-align: center;
+    transform: scale(0.9); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 2.5rem 2rem; display: flex; flex-direction: column; gap: 1rem;
 }
+.custom-modal-overlay.active .modal-box { transform: scale(1); }
 
-.id-tag { color: var(--text-muted); font-family: 'Space Mono', monospace; }
-.operator-name { font-weight: 600; font-size: 1.05rem; }
-.text-dimmed { color: var(--text-muted); font-size: 0.9rem; }
-.font-mono { font-family: 'Space Mono', monospace; }
+.modal-icon { color: var(--danger); margin-bottom: 0.5rem; filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.5)); }
+.modal-title { font-size: 1.3rem; font-weight: 800; color: var(--text-white); letter-spacing: 2px; }
+.modal-text { color: var(--text-dim); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; }
+.modal-actions { display: flex; gap: 1rem; justify-content: center; }
+.modal-actions button { width: 100%; }
 
-.course-badge {
-    background: var(--purple-dim);
-    color: #e599ff;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 0.75rem;
-    letter-spacing: 1px;
-    border: 1px solid rgba(176, 38, 255, 0.3);
-}
+.danger-glow { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); box-shadow: 0 0 15px rgba(239, 68, 68, 0.2); }
+.danger-glow:hover { background: var(--danger); color: white; box-shadow: 0 0 25px rgba(239, 68, 68, 0.5); }
 
-/* BOTÕES DE AÇÃO NA TABELA */
-.actions { display: flex; gap: 12px; }
-
-.action-icon {
-    display: flex; align-items: center; justify-content: center;
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-muted);
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.edit-icon:hover { background: var(--cyan-dim); color: var(--cyan); transform: translateY(-4px) translateZ(20px); }
-.delete-icon:hover { background: rgba(255, 60, 120, 0.2); color: #ff3c78; transform: translateY(-4px) translateZ(20px); }
+/* Animações GERAIS */
+@keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn 0.8s ease-out; }
+@keyframes fadeIn { from { opacity: 0; filter: blur(5px); } to { opacity: 1; filter: blur(0); } }
