@@ -1,201 +1,222 @@
 /* =========================================
-   AURA DESIGN SYSTEM (Supernova Palette)
+   NEO-BRUTALISM THEME
    ========================================= */
    :root {
-    --bg-void: #050505;
-    --bento-surface: rgba(15, 15, 18, 0.6);
-    --bento-border: rgba(255, 255, 255, 0.08);
-    --bento-hover: rgba(255, 255, 255, 0.12);
+    --bg-color: #f4f4f0; /* Fundo papel off-white */
+    --black: #0f0f0f;
+    --white: #ffffff;
     
-    --amber: #f5a623;
-    --amber-glow: rgba(245, 166, 35, 0.3);
-    --pink: #ec4899;
-    --purple: #8b5cf6;
+    /* Cores Primárias Chapadas */
+    --neo-green: #2ecc71;
+    --neo-yellow: #f1c40f;
+    --neo-pink: #ff79c6;
+    --neo-blue: #3498db;
+    --neo-red: #ff4757;
     
-    --text-pure: #ffffff;
-    --text-dim: #a1a1aa;
-    --danger: #ef4444;
+    --border-thick: 4px solid var(--black);
+    --border-thin: 2px solid var(--black);
+    --shadow-solid: 6px 6px 0px var(--black);
+    --shadow-hover: 2px 2px 0px var(--black);
 }
 
 * {
     margin: 0; padding: 0; box-sizing: border-box;
-    font-family: 'Outfit', sans-serif;
-    cursor: none !important; /* Cursor premium */
 }
 
 body {
-    background-color: var(--bg-void);
-    color: var(--text-pure);
+    background-color: var(--bg-color);
+    color: var(--black);
+    font-family: 'Epilogue', sans-serif; /* Fonte ultra bold */
     min-height: 100vh;
-    display: flex; justify-content: center; align-items: flex-start;
-    padding: 3rem 1rem; overflow-x: hidden;
+    /* Um leve grid no fundo (Dots) */
+    background-image: radial-gradient(var(--black) 1px, transparent 1px);
+    background-size: 30px 30px;
+    background-position: -15px -15px;
 }
 
-.mono-text { font-family: 'Fira Code', monospace; letter-spacing: 1px; }
-.text-dim { color: var(--text-dim); font-weight: 400; }
-.text-amber { color: var(--amber); }
-.text-pink { color: var(--pink); }
+.font-mono { font-family: 'Space Mono', monospace; }
 
 /* =========================================
-   CURSOR DE PRECISÃO
+   LETREIRO MARQUEE
    ========================================= */
-.cursor-dot {
-    width: 6px; height: 6px; background: var(--amber);
-    position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999;
-    transform: translate(-50%, -50%); box-shadow: 0 0 12px var(--amber);
+.marquee-container {
+    background-color: var(--black);
+    color: var(--neo-yellow);
+    padding: 10px 0;
+    overflow: hidden;
+    border-bottom: var(--border-thick);
+    white-space: nowrap;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 1rem;
 }
 
-.cursor-outline {
-    width: 40px; height: 40px; border: 1px solid rgba(245, 166, 35, 0.4);
-    position: fixed; border-radius: 50%; pointer-events: none; z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: width 0.2s, height 0.2s, border-color 0.2s, background 0.2s, left 0.1s ease-out, top 0.1s ease-out;
+.marquee-content {
+    display: inline-block;
+    animation: marquee 20s linear infinite;
 }
+.marquee-content span { padding-right: 50px; }
 
-.hover-magnetic:hover ~ .cursor-outline,
-input:focus ~ .cursor-outline,
-a:hover ~ .cursor-outline,
-button:hover ~ .cursor-outline {
-    width: 55px; height: 55px; border-color: var(--amber);
-    background: rgba(245, 166, 35, 0.05);
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 
 /* =========================================
-   FUNDO GEOMÉTRICO + AURORA
+   ESTRUTURA DOS BLOCOS
    ========================================= */
-.bg-grid {
-    position: fixed; inset: 0; z-index: -2;
-    background-size: 40px 40px;
-    background-image: 
-        linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-    mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
-    -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
-}
+.main-wrapper { max-width: 1400px; margin: 0 auto; padding: 3rem 2rem; }
 
-.bg-mesh { position: fixed; inset: 0; z-index: -3; overflow: hidden; background: var(--bg-void); }
-.glow-orb { position: absolute; border-radius: 50%; filter: blur(140px); opacity: 0.3; animation: drift 20s infinite alternate ease-in-out; }
-.orb-amber { width: 50vw; height: 50vw; background: var(--amber); top: -20%; left: -10%; }
-.orb-pink { width: 45vw; height: 45vw; background: var(--pink); bottom: -20%; right: -10%; animation-delay: -5s; }
-.orb-purple { width: 30vw; height: 30vw; background: var(--purple); top: 30%; left: 30%; animation-duration: 25s; opacity: 0.2; }
-
-@keyframes drift { 100% { transform: translate(50px, -50px) scale(1.1); } }
-
-/* =========================================
-   LAYOUT BENTO BOX (A Grade Inteligente)
-   ========================================= */
-.bento-container {
-    width: 100%; max-width: 1200px;
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: auto auto auto;
-    gap: 20px;
-    position: relative; z-index: 1;
-}
-
-.bento-item {
-    background: var(--bento-surface);
-    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-    border: 1px solid var(--bento-border);
-    border-radius: 24px;
+.neo-box {
+    background: var(--white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-solid);
     padding: 2rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    transition: border-color 0.3s;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.bento-item:hover { border-color: var(--bento-hover); }
-
-/* Posicionamento do Bento */
-.bento-header { grid-column: span 12; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; }
-.bento-stats { grid-column: span 4; display: flex; flex-direction: column; justify-content: space-between; }
-.bento-form { grid-column: span 8; }
-.bento-table { grid-column: span 12; }
-
-/* Responsividade do Bento */
-@media (max-width: 992px) {
-    .bento-stats { grid-column: span 12; }
-    .bento-form { grid-column: span 12; }
+.neo-box:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px var(--black);
 }
 
-/* =========================================
-   MÓDULOS INTERNOS
-   ========================================= */
-.module-title { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: var(--text-dim); font-weight: 700; letter-spacing: 2px; margin-bottom: 1.5rem; text-transform: uppercase; }
-.brand { display: flex; align-items: center; gap: 15px; }
-.brand h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: 3px; }
-.core-spinner { width: 20px; height: 20px; border: 2px solid transparent; border-top-color: var(--amber); border-right-color: var(--pink); border-radius: 50%; animation: spin 1s linear infinite; }
-@keyframes spin { 100% { transform: rotate(360deg); } }
+/* Cores de sombra específicas para dar personalidade */
+.pink-shadow { box-shadow: 6px 6px 0px var(--neo-pink); border-color: var(--black); }
+.pink-shadow:hover { box-shadow: 8px 8px 0px var(--neo-pink); }
 
-.nav-metrics { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; background: rgba(245, 166, 35, 0.1); padding: 8px 15px; border-radius: 12px; border: 1px solid rgba(245, 166, 35, 0.2); }
-.status-dot { width: 8px; height: 8px; background: var(--amber); border-radius: 50%; box-shadow: 0 0 10px var(--amber); animation: pulse 2s infinite; }
-@keyframes pulse { 50% { opacity: 0.3; } }
+.blue-shadow { box-shadow: 6px 6px 0px var(--neo-blue); }
+.blue-shadow:hover { box-shadow: 8px 8px 0px var(--neo-blue); }
 
-.stat-big { font-size: 4rem; font-weight: 500; line-height: 1; margin-bottom: 0.5rem; color: var(--text-pure); }
-.mini-chart { display: flex; align-items: flex-end; gap: 6px; height: 40px; margin-top: 1.5rem; }
-.bar { flex: 1; background: linear-gradient(to top, var(--purple), var(--pink)); border-radius: 4px; animation: growBar 1s ease-out backwards; }
-@keyframes growBar { from { height: 0; } }
+.red-shadow { box-shadow: 8px 8px 0px var(--neo-red) !important; }
 
-/* =========================================
-   FORMULÁRIO (Elegante e Simples)
-   ========================================= */
-.aura-form { display: flex; flex-direction: column; gap: 1.5rem; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-.form-row-single { display: grid; grid-template-columns: 1fr 200px; gap: 1.5rem; align-items: stretch; }
+/* Cabeçalho */
+.neo-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 3rem; padding: 1.5rem 2rem;
+}
 
-@media (max-width: 600px) { .form-row, .form-row-single { grid-template-columns: 1fr; } }
+.brand-block { display: flex; align-items: center; gap: 15px; }
+.black-square { width: 30px; height: 30px; background: var(--black); animation: flip 2s infinite steps(2); }
+@keyframes flip { 100% { transform: rotate(180deg); } }
 
-.input-box { position: relative; width: 100%; }
-.input-box input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--bento-border); color: white; padding: 1.2rem 1rem 0.8rem; border-radius: 12px; outline: none; font-size: 1rem; transition: 0.3s; }
-.input-border { position: absolute; inset: 0; border-radius: 12px; border: 1px solid transparent; pointer-events: none; transition: 0.4s ease; }
-.input-box input:focus { background: rgba(0,0,0,0.5); }
-.input-box input:focus ~ .input-border { border-color: var(--amber); box-shadow: inset 0 0 15px rgba(245, 166, 35, 0.15); }
+.brand-block h1 { font-size: 2.5rem; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; }
 
-.input-box label { position: absolute; left: 1rem; top: 1rem; color: var(--text-dim); font-size: 0.85rem; pointer-events: none; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-.input-box input:focus ~ label, .input-box input:not(:placeholder-shown) ~ label { top: -0.6rem; left: 0.8rem; font-size: 0.7rem; color: var(--amber); background: var(--bg-void); padding: 0 0.4rem; border-radius: 4px; }
+.mono-badge {
+    font-family: 'Space Mono', monospace; font-weight: 700;
+    border: var(--border-thin); padding: 8px 16px;
+    background: var(--white); box-shadow: 3px 3px 0px var(--black);
+}
+.yellow-bg { background: var(--neo-yellow); }
 
-/* Botão Premium */
-.btn-premium { display: flex; justify-content: center; align-items: center; gap: 10px; background: var(--text-pure); color: var(--bg-void); border: none; font-size: 0.9rem; font-weight: 700; border-radius: 12px; cursor: none; transition: 0.3s; }
-.btn-premium:hover { background: var(--amber); box-shadow: 0 8px 25px var(--amber-glow); transform: translateY(-2px); }
+/* Grid de Layout */
+.grid-layout { display: grid; grid-template-columns: 400px 1fr; gap: 3rem; }
+@media (max-width: 1024px) { .grid-layout { grid-template-columns: 1fr; } }
+
+.box-title { display: flex; justify-content: space-between; align-items: center; border-bottom: var(--border-thick); padding-bottom: 1rem; margin-bottom: 2rem; }
+.box-title h2 { font-weight: 900; font-size: 1.8rem; }
 
 /* =========================================
-   TABELA BENTO (Perfeição Minimalista)
+   FORMULÁRIO BRUTALISTA
    ========================================= */
-.table-wrapper { overflow-x: auto; }
-.aura-table { width: 100%; border-collapse: collapse; }
-.aura-table th { text-align: left; padding: 1rem; font-size: 0.75rem; color: var(--text-dim); letter-spacing: 1px; border-bottom: 1px solid var(--bento-border); }
-.aura-table tbody tr { transition: 0.2s ease; animation: fadeUp 0.6s backwards; }
-.aura-table td { padding: 1.2rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.95rem; }
+.brutalist-form { display: flex; flex-direction: column; gap: 1.5rem; }
 
-.aura-table tbody tr:hover { background: rgba(255,255,255,0.02); }
-.fw-bold { font-weight: 600; }
-.chip { background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; color: var(--text-pure); border: 1px solid var(--bento-border); }
+.input-block { display: flex; flex-direction: column; gap: 8px; }
+.input-block label { font-weight: 800; font-size: 0.9rem; text-transform: uppercase; }
 
-/* Ações */
-.action-stack { display: flex; gap: 8px; }
-.icon-action { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; background: rgba(255,255,255,0.03); color: var(--text-dim); transition: 0.2s; border: 1px solid transparent; cursor: none; }
-.btn-edit:hover { background: rgba(245, 166, 35, 0.1); color: var(--amber); border-color: rgba(245, 166, 35, 0.3); transform: translateY(-2px); }
-.btn-delete:hover { background: rgba(236, 72, 153, 0.1); color: var(--pink); border-color: rgba(236, 72, 153, 0.3); transform: translateY(-2px); }
+.input-block input {
+    background: var(--white);
+    border: var(--border-thick);
+    padding: 1rem; font-size: 1.1rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--black);
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+    transition: 0.2s; outline: none;
+}
+
+.input-block input:focus {
+    box-shadow: 6px 6px 0px var(--neo-yellow);
+    transform: translate(-2px, -2px);
+}
+
+/* Botões Fortes */
+.neo-btn {
+    display: flex; justify-content: center; align-items: center; gap: 10px;
+    border: var(--border-thick); padding: 1.2rem;
+    font-family: 'Epilogue', sans-serif; font-size: 1.1rem; font-weight: 900;
+    cursor: pointer; box-shadow: var(--shadow-solid);
+    transition: 0.1s; text-decoration: none; color: var(--black); text-transform: uppercase;
+}
+
+.neo-btn:active { transform: translate(4px, 4px) !important; box-shadow: 0px 0px 0px var(--black) !important; }
+
+.green-btn { background: var(--neo-green); }
+.green-btn:hover { background: #27ae60; transform: translate(-2px, -2px); box-shadow: 8px 8px 0px var(--black); }
+
+.white-btn { background: var(--white); }
+.white-btn:hover { background: #eee; }
+
+.red-btn { background: var(--neo-red); color: white; }
+.red-btn:hover { background: #ff3344; transform: translate(-2px, -2px); box-shadow: 8px 8px 0px var(--black); }
 
 /* =========================================
-   MODAL DE EXCLUSÃO (Supernova Style)
+   TABELA COMO PLANILHA FÍSICA
    ========================================= */
-.aura-modal-overlay { position: fixed; inset: 0; background: rgba(2, 2, 3, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s ease; }
-.aura-modal-overlay.active { opacity: 1; pointer-events: auto; }
+.table-scroll { overflow-x: auto; }
+.neo-table { width: 100%; border-collapse: collapse; border: var(--border-thick); }
 
-.aura-modal-box { background: var(--bento-surface); border: 1px solid var(--bento-border); border-radius: 24px; max-width: 400px; width: 90%; text-align: center; padding: 2.5rem; transform: scale(0.95); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
-.aura-modal-overlay.active .aura-modal-box { transform: scale(1); }
+.neo-table th, .neo-table td {
+    border: var(--border-thin);
+    padding: 1rem; text-align: left;
+}
 
-.modal-icon { margin-bottom: 1rem; filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.5)); }
-.modal-title { font-size: 1.2rem; font-weight: 700; letter-spacing: 2px; margin-bottom: 0.5rem; }
-.modal-text { color: var(--text-dim); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem; }
+.neo-table th { background: var(--black); color: var(--white); font-weight: 800; font-size: 1rem; letter-spacing: 1px; }
+.neo-table tbody tr { background: var(--white); transition: 0.1s; }
+.neo-table tbody tr:hover { background: var(--neo-yellow); }
+
+.heavy-text { font-weight: 900; font-size: 1.1rem; text-transform: uppercase; }
+
+.neo-tag {
+    background: var(--white); border: 2px solid var(--black);
+    padding: 4px 10px; font-weight: 800; font-size: 0.85rem;
+    box-shadow: 2px 2px 0px var(--black);
+}
+
+/* Botões da Tabela */
+.btn-group { display: flex; gap: 10px; }
+
+.neo-icon-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; border: var(--border-thin);
+    color: var(--black); box-shadow: 3px 3px 0px var(--black);
+    transition: 0.1s; cursor: pointer; text-decoration: none;
+}
+
+.neo-icon-btn.yellow-bg:hover { background: #f1c40f; transform: translate(-2px, -2px); box-shadow: 5px 5px 0px var(--black); }
+.neo-icon-btn.red-bg { background: var(--neo-red); color: white; }
+.neo-icon-btn.red-bg:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0px var(--black); }
+.neo-icon-btn:active { transform: translate(2px, 2px) !important; box-shadow: 0px 0px 0px var(--black) !important; }
+
+/* =========================================
+   MODAL (Aviso Estilo "Erro de Sistema")
+   ========================================= */
+.neo-modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(244, 244, 240, 0.8); /* Fundo claro semi-transparente */
+    z-index: 10000; display: flex; justify-content: center; align-items: center;
+    opacity: 0; pointer-events: none; transition: 0.2s;
+}
+
+.neo-modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+.modal-content {
+    max-width: 500px; width: 90%; text-align: center;
+    transform: translateY(50px); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.neo-modal-overlay.active .modal-content { transform: translateY(0); }
+
+.modal-content h2 { font-size: 2.5rem; font-weight: 900; color: var(--neo-red); margin-bottom: 1rem; border-bottom: var(--border-thick); padding-bottom: 10px; }
+.modal-content p { font-family: 'Space Mono', monospace; font-size: 1rem; line-height: 1.5; margin-bottom: 2rem; font-weight: 700; }
 
 .modal-buttons { display: flex; gap: 1rem; }
-.modal-buttons button { flex: 1; padding: 1rem; border-radius: 12px; font-weight: 700; cursor: none; transition: 0.3s; }
-.btn-secondary { background: transparent; color: var(--text-pure); border: 1px solid var(--bento-border); }
-.btn-secondary:hover { background: rgba(255,255,255,0.05); }
-.btn-danger { background: rgba(236, 72, 153, 0.1); color: var(--pink); border: 1px solid var(--pink); box-shadow: 0 0 15px rgba(236, 72, 153, 0.2); }
-.btn-danger:hover { background: var(--pink); color: var(--bg-void); box-shadow: 0 0 25px rgba(236, 72, 153, 0.5); }
-
-/* Animações GERAIS */
-.fade-in { animation: fadeUp 0.8s ease-out; }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); filter: blur(5px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+.modal-buttons button { flex: 1; }
