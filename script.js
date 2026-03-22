@@ -1,58 +1,75 @@
 document.addEventListener("DOMContentLoaded", () => {
     
-    // 1. RELÓGIO DO SISTEMA TÁTICO
-    const clockElement = document.getElementById('sys-clock');
-    function updateClock() {
-        const now = new Date();
-        const h = String(now.getHours()).padStart(2, '0');
-        const m = String(now.getMinutes()).padStart(2, '0');
-        const s = String(now.getSeconds()).padStart(2, '0');
-        const ms = String(Math.floor(now.getMilliseconds() / 10)).padStart(2, '0');
-        
-        if (clockElement) clockElement.textContent = `${h}:${m}:${s}:${ms}`;
-    }
-    setInterval(updateClock, 47); // Atualiza rapidinho pelos milisegundos
-
-    // 2. TERMINAL DE LOGS (Hacker Text Effect)
-    const logBox = document.getElementById('terminal-logs');
-    function generateHex() {
-        return Math.floor(Math.random()*16777215).toString(16).toUpperCase().padStart(6, '0');
-    }
-    function addLog() {
-        if (!logBox) return;
-        const newLog = document.createElement('div');
-        // Adiciona mensagens com cara de sistema
-        const actions = ["PING", "FETCH", "DECRYPT", "AUTH", "TRACE"];
-        const action = actions[Math.floor(Math.random() * actions.length)];
-        
-        newLog.textContent = `> ${action} 0x${generateHex()} ... [OK]`;
-        logBox.prepend(newLog); // Joga no topo (a div tem column-reverse)
-
-        // Mantém só os últimos 15 logs pra não pesar a tela
-        if (logBox.children.length > 15) {
-            logBox.removeChild(logBox.lastChild);
-        }
-    }
-    setInterval(addLog, 400); // Gera um log a cada 400ms
-
-    // 3. SISTEMA DE ABAS (Tabs Navigation)
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Remove active de todos
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-
-            // Adiciona ativo no clicado
-            btn.classList.add('active');
-            const targetId = btn.getAttribute('data-tab');
-            document.getElementById(targetId).classList.add('active');
+    // 1. EFEITO SPOTLIGHT (BIONIC BORDERS)
+    const bionicCards = document.querySelectorAll('.bionic-card');
+    
+    document.addEventListener('mousemove', (e) => {
+        bionicCards.forEach(card => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
         });
     });
 
-    // 4. MODAL DE EXCLUSÃO
+    // 2. SISTEMA DE NAVEGAÇÃO SPA (Com suporte a Aba de Diagnóstico)
+    const navItems = document.querySelectorAll('.nav-item[data-view]');
+    const viewSections = document.querySelectorAll('.view-section');
+    const shortcutAdd = document.getElementById('btn-shortcut-add');
+
+    function switchView(targetViewId) {
+        viewSections.forEach(view => {
+            view.style.opacity = '0';
+        });
+
+        setTimeout(() => {
+            navItems.forEach(nav => nav.classList.remove('active'));
+            viewSections.forEach(view => view.classList.remove('active'));
+            
+            const targetNav = document.querySelector(`[data-view="${targetViewId}"]`);
+            if (targetNav) targetNav.classList.add('active');
+            
+            const targetView = document.getElementById(targetViewId);
+            targetView.classList.add('active');
+            
+            setTimeout(() => {
+                targetView.style.opacity = '1';
+            }, 50);
+        }, 150); 
+    }
+
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            switchView(item.getAttribute('data-view'));
+        });
+    });
+
+    if (shortcutAdd) {
+        shortcutAdd.addEventListener('click', () => switchView('view-insert'));
+    }
+
+    // 3. BARRA DE PESQUISA (Filtro na tabela)
+    const searchInput = document.getElementById('tableSearch');
+    const tableRows = document.querySelectorAll('.table-row');
+
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function() {
+            const filter = this.value.toLowerCase();
+            
+            tableRows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                if (rowText.includes(filter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    // 4. DIALOG DE EXCLUSÃO (Modal)
     const deleteButtons = document.querySelectorAll('.custom-delete-btn');
     const modalOverlay = document.getElementById('deleteModal');
     const btnCancel = document.getElementById('btnCancelDelete');
@@ -68,12 +85,29 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        btnCancel.addEventListener('click', () => {
-            modalOverlay.classList.remove('active'); 
-        });
-
+        const closeModal = () => modalOverlay.classList.remove('active');
+        btnCancel.addEventListener('click', closeModal);
+        
         btnConfirm.addEventListener('click', () => {
             window.location.href = deleteUrl; 
         });
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+    }
+
+    // 5. TOAST NOTIFICATION (Exposto globalmente para o form)
+    window.showToast = function(message) {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toast-msg');
+        
+        if(toast && toastMsg) {
+            toastMsg.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
     }
 });
