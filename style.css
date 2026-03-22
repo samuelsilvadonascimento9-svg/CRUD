@@ -1,222 +1,176 @@
 /* =========================================
-   NEO-BRUTALISM THEME
+   QUANTUM SPATIAL OS THEME
    ========================================= */
-   :root {
-    --bg-color: #f4f4f0; /* Fundo papel off-white */
-    --black: #0f0f0f;
-    --white: #ffffff;
+:root {
+    --bg-space: #03050A;
+    --liquid-1: #1A1F35; /* Azul profundo */
+    --liquid-2: #3B2F4F; /* Roxo profundo */
+    --liquid-accent: #00F0FF; /* Ciano Neon */
     
-    /* Cores Primárias Chapadas */
-    --neo-green: #2ecc71;
-    --neo-yellow: #f1c40f;
-    --neo-pink: #ff79c6;
-    --neo-blue: #3498db;
-    --neo-red: #ff4757;
+    --glass-surface: rgba(20, 25, 40, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-highlight: rgba(255, 255, 255, 0.3);
     
-    --border-thick: 4px solid var(--black);
-    --border-thin: 2px solid var(--black);
-    --shadow-solid: 6px 6px 0px var(--black);
-    --shadow-hover: 2px 2px 0px var(--black);
+    --text-primary: #FFFFFF;
+    --text-secondary: #8A9FB8;
+    
+    --danger: #FF2E5B;
+
+    /* A mágica da profundidade 3D */
+    --spatial-shadow: 
+        0 30px 60px -12px rgba(0,0,0,0.8), /* Sombra de profundidade */
+        0 0 0 1px var(--glass-border), /* Borda física */
+        inset 0 1px 1px var(--glass-highlight); /* Reflexo de topo */
 }
 
-* {
-    margin: 0; padding: 0; box-sizing: border-box;
-}
-
-body {
-    background-color: var(--bg-color);
-    color: var(--black);
-    font-family: 'Epilogue', sans-serif; /* Fonte ultra bold */
-    min-height: 100vh;
-    /* Um leve grid no fundo (Dots) */
-    background-image: radial-gradient(var(--black) 1px, transparent 1px);
-    background-size: 30px 30px;
-    background-position: -15px -15px;
-}
-
-.font-mono { font-family: 'Space Mono', monospace; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background-color: var(--bg-space); color: var(--text-primary); font-family: 'Manrope', sans-serif; height: 100vh; overflow: hidden; position: relative; }
+.mono { font-family: 'Space Mono', monospace; letter-spacing: 1px; }
 
 /* =========================================
-   LETREIRO MARQUEE
+   FUNDO LÍQUIDO METÁLICO
    ========================================= */
-.marquee-container {
-    background-color: var(--black);
-    color: var(--neo-yellow);
-    padding: 10px 0;
+.liquid-desktop { position: fixed; inset: -20%; z-index: -2; overflow: hidden; background: var(--bg-space); filter: blur(120px); opacity: 0.6; }
+.liquid-blob { position: absolute; border-radius: 50%; animation: liquidMove 20s infinite alternate ease-in-out; }
+.blob-1 { width: 60vw; height: 60vw; background: var(--liquid-accent); top: 20%; left: 10%; opacity: 0.2; }
+.blob-2 { width: 70vw; height: 70vw; background: var(--liquid-1); bottom: -10%; right: -20%; animation-delay: -5s; }
+.blob-3 { width: 50vw; height: 50vw; background: var(--liquid-2); top: -30%; right: 20%; animation-delay: -10s; }
+.noise-overlay { position: fixed; inset: 0; z-index: -1; background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWjAAAAG1BMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAArdaaaAAAACHRSTlMABg8XHiQ2P08/9wEAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAAwSURBVDjLY2AYBcMIMIIxoxgYGIEwGAlD5Rjh8oRBhPAcIlyeE5TjBOU0wY0CAAA93QZBAf5l4gAAAABJRU5ErkJggg=='); opacity: 0.03; pointer-events: none; }
+@keyframes liquidMove { 0% { transform: translate(0,0) scale(1) rotate(0deg); } 100% { transform: translate(10%, 5%) scale(1.1) rotate(15deg); } }
+
+/* =========================================
+   AMBIENTE ESPACIAL & JANELAS
+   ========================================= */
+.desktop-environment { position: relative; width: 100%; height: 100vh; perspective: 2000px; padding: 2rem; }
+
+/* A JANELA ESPACIAL FLUTUANTE */
+.spatial-window {
+    position: absolute;
+    background: var(--glass-surface);
+    /* Desfoque extremo para efeito de vidro grosso */
+    backdrop-filter: blur(50px) saturate(150%); -webkit-backdrop-filter: blur(50px) saturate(150%);
+    border-radius: 20px;
+    box-shadow: var(--spatial-shadow);
+    width: 450px; max-width: 90vw;
+    display: flex; flex-direction: column;
     overflow: hidden;
-    border-bottom: var(--border-thick);
-    white-space: nowrap;
-    font-family: 'Space Mono', monospace;
-    font-weight: 700;
-    font-size: 1rem;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease, box-shadow 0.3s ease;
+    /* Estado inicial: fechado (escondido no fundo) */
+    opacity: 0; transform: translateZ(-200px) scale(0.9); pointer-events: none;
 }
 
-.marquee-content {
-    display: inline-block;
-    animation: marquee 20s linear infinite;
+/* Estado ativo: aberto e flutuando à frente */
+.spatial-window.active {
+    opacity: 1; transform: translateZ(0) scale(1); pointer-events: auto;
 }
-.marquee-content span { padding-right: 50px; }
+/* Quando clica na janela, ela vem para frente */
+.spatial-window:active, .spatial-window:focus-within { z-index: 10 !important; box-shadow: 0 40px 80px -12px rgba(0,0,0,0.9), var(--spatial-shadow); }
 
-@keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+/* Barra de Título da Janela */
+.window-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px; background: rgba(0,0,0,0.2);
+    border-bottom: 1px solid var(--glass-border); user-select: none;
 }
+.window-controls { display: flex; gap: 8px; }
+.win-btn { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+.close-btn { background: #FF5F57; } .minimize-btn { background: #FEBC2E; }
+.window-title { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; }
+.window-content { padding: 24px; flex: 1; overflow-y: auto; }
+.scrollable { max-height: 70vh; }
+.cursor-grab { cursor: grab; } /* Sugere que pode arrastar (futuramente) */
 
 /* =========================================
-   ESTRUTURA DOS BLOCOS
+   DOCK BAR (Barra de Tarefas)
    ========================================= */
-.main-wrapper { max-width: 1400px; margin: 0 auto; padding: 3rem 2rem; }
-
-.neo-box {
-    background: var(--white);
-    border: var(--border-thick);
-    box-shadow: var(--shadow-solid);
-    padding: 2rem;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+.dock-container {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    z-index: 100; perspective: 1000px;
 }
-
-.neo-box:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0px var(--black);
+.quantum-dock {
+    display: flex; gap: 15px; padding: 12px 15px;
+    background: rgba(20, 25, 40, 0.6);
+    backdrop-filter: blur(30px); border-radius: 24px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    transform-style: preserve-3d;
 }
-
-/* Cores de sombra específicas para dar personalidade */
-.pink-shadow { box-shadow: 6px 6px 0px var(--neo-pink); border-color: var(--black); }
-.pink-shadow:hover { box-shadow: 8px 8px 0px var(--neo-pink); }
-
-.blue-shadow { box-shadow: 6px 6px 0px var(--neo-blue); }
-.blue-shadow:hover { box-shadow: 8px 8px 0px var(--neo-blue); }
-
-.red-shadow { box-shadow: 8px 8px 0px var(--neo-red) !important; }
-
-/* Cabeçalho */
-.neo-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 3rem; padding: 1.5rem 2rem;
+.dock-icon {
+    position: relative; width: 50px; height: 50px; border-radius: 16px;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+    color: var(--text-secondary); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: 0.3s cubic-bezier(0.3, 1.5, 0.5, 1);
 }
-
-.brand-block { display: flex; align-items: center; gap: 15px; }
-.black-square { width: 30px; height: 30px; background: var(--black); animation: flip 2s infinite steps(2); }
-@keyframes flip { 100% { transform: rotate(180deg); } }
-
-.brand-block h1 { font-size: 2.5rem; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; }
-
-.mono-badge {
-    font-family: 'Space Mono', monospace; font-weight: 700;
-    border: var(--border-thin); padding: 8px 16px;
-    background: var(--white); box-shadow: 3px 3px 0px var(--black);
-}
-.yellow-bg { background: var(--neo-yellow); }
-
-/* Grid de Layout */
-.grid-layout { display: grid; grid-template-columns: 400px 1fr; gap: 3rem; }
-@media (max-width: 1024px) { .grid-layout { grid-template-columns: 1fr; } }
-
-.box-title { display: flex; justify-content: space-between; align-items: center; border-bottom: var(--border-thick); padding-bottom: 1rem; margin-bottom: 2rem; }
-.box-title h2 { font-weight: 900; font-size: 1.8rem; }
+.dock-icon:hover { transform: translateY(-10px) scale(1.1); color: var(--liquid-accent); background: rgba(0, 240, 255, 0.1); }
+.dock-icon.active { color: var(--liquid-accent); background: rgba(0, 240, 255, 0.15); box-shadow: 0 0 20px rgba(0, 240, 255, 0.4); }
+.dock-glow { position: absolute; inset: 0; border-radius: 16px; box-shadow: 0 0 0px var(--liquid-accent); transition: 0.3s; opacity: 0; }
+.dock-icon.active .dock-glow { box-shadow: 0 0 30px var(--liquid-accent); opacity: 0.6; }
 
 /* =========================================
-   FORMULÁRIO BRUTALISTA
+   FORMULÁRIO QUÂNTICO
    ========================================= */
-.brutalist-form { display: flex; flex-direction: column; gap: 1.5rem; }
-
-.input-block { display: flex; flex-direction: column; gap: 8px; }
-.input-block label { font-weight: 800; font-size: 0.9rem; text-transform: uppercase; }
-
-.input-block input {
-    background: var(--white);
-    border: var(--border-thick);
-    padding: 1rem; font-size: 1.1rem;
-    font-family: 'Space Mono', monospace;
-    color: var(--black);
-    box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
-    transition: 0.2s; outline: none;
+.quantum-form { display: flex; flex-direction: column; gap: 20px; }
+.q-input-group { position: relative; display: flex; flex-direction: column; gap: 8px; }
+.q-input-group label { font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); letter-spacing: 1px; }
+.q-input-group input {
+    background: rgba(0,0,0,0.3); border: none; border-bottom: 2px solid var(--glass-border);
+    padding: 12px 0; color: var(--text-primary); font-family: 'Space Mono', monospace;
+    font-size: 1rem; outline: none; transition: 0.3s;
 }
+.input-focus-line { position: absolute; bottom: 0; left: 0; width: 0%; height: 2px; background: var(--liquid-accent); transition: 0.4s ease; box-shadow: 0 0 15px var(--liquid-accent); }
+.q-input-group input:focus ~ .input-focus-line { width: 100%; }
+.q-input-group input::placeholder { color: rgba(255,255,255,0.2); }
 
-.input-block input:focus {
-    box-shadow: 6px 6px 0px var(--neo-yellow);
-    transform: translate(-2px, -2px);
+.quantum-btn {
+    position: relative; padding: 16px; background: var(--liquid-accent); color: #000;
+    border: none; font-weight: 800; font-size: 0.9rem; letter-spacing: 2px;
+    clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%); /* Forma futurista */
+    cursor: pointer; transition: 0.3s; overflow: hidden; margin-top: 10px;
 }
-
-/* Botões Fortes */
-.neo-btn {
-    display: flex; justify-content: center; align-items: center; gap: 10px;
-    border: var(--border-thick); padding: 1.2rem;
-    font-family: 'Epilogue', sans-serif; font-size: 1.1rem; font-weight: 900;
-    cursor: pointer; box-shadow: var(--shadow-solid);
-    transition: 0.1s; text-decoration: none; color: var(--black); text-transform: uppercase;
-}
-
-.neo-btn:active { transform: translate(4px, 4px) !important; box-shadow: 0px 0px 0px var(--black) !important; }
-
-.green-btn { background: var(--neo-green); }
-.green-btn:hover { background: #27ae60; transform: translate(-2px, -2px); box-shadow: 8px 8px 0px var(--black); }
-
-.white-btn { background: var(--white); }
-.white-btn:hover { background: #eee; }
-
-.red-btn { background: var(--neo-red); color: white; }
-.red-btn:hover { background: #ff3344; transform: translate(-2px, -2px); box-shadow: 8px 8px 0px var(--black); }
+.quantum-btn:hover { transform: scale(1.05); letter-spacing: 4px; background: white; box-shadow: 0 0 30px var(--liquid-accent); }
+.btn-glitch { position: absolute; inset: 0; background: rgba(255,255,255,0.5); transform: translateX(-100%); transition: 0.5s; }
+.quantum-btn:hover .btn-glitch { transform: translateX(100%); }
 
 /* =========================================
-   TABELA COMO PLANILHA FÍSICA
+   TABELA DE DADOS (Visualizador)
    ========================================= */
-.table-scroll { overflow-x: auto; }
-.neo-table { width: 100%; border-collapse: collapse; border: var(--border-thick); }
+.quantum-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+.quantum-table th { text-align: left; padding: 10px 15px; font-size: 0.7rem; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 1px; }
+.quantum-table tbody tr { background: rgba(255,255,255,0.03); transition: 0.3s; animation: slideIn 0.6s backwards; border: 1px solid transparent; }
+.quantum-table tbody tr:hover { background: rgba(0, 240, 255, 0.05); border-color: rgba(0, 240, 255, 0.3); transform: scale(1.02) translateZ(20px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+.quantum-table td { padding: 12px 15px; font-size: 0.9rem; }
+.quantum-table td:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+.quantum-table td:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
 
-.neo-table th, .neo-table td {
-    border: var(--border-thin);
-    padding: 1rem; text-align: left;
-}
+.mono-id { color: var(--liquid-accent); font-family: 'Space Mono', monospace; }
+.user-cell { display: flex; flex-direction: column; }
+.user-name { font-weight: 700; }
+.user-email { font-size: 0.8rem; color: var(--text-secondary); }
+.vector-badge { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
 
-.neo-table th { background: var(--black); color: var(--white); font-weight: 800; font-size: 1rem; letter-spacing: 1px; }
-.neo-table tbody tr { background: var(--white); transition: 0.1s; }
-.neo-table tbody tr:hover { background: var(--neo-yellow); }
-
-.heavy-text { font-weight: 900; font-size: 1.1rem; text-transform: uppercase; }
-
-.neo-tag {
-    background: var(--white); border: 2px solid var(--black);
-    padding: 4px 10px; font-weight: 800; font-size: 0.85rem;
-    box-shadow: 2px 2px 0px var(--black);
-}
-
-/* Botões da Tabela */
-.btn-group { display: flex; gap: 10px; }
-
-.neo-icon-btn {
-    display: flex; align-items: center; justify-content: center;
-    width: 40px; height: 40px; border: var(--border-thin);
-    color: var(--black); box-shadow: 3px 3px 0px var(--black);
-    transition: 0.1s; cursor: pointer; text-decoration: none;
-}
-
-.neo-icon-btn.yellow-bg:hover { background: #f1c40f; transform: translate(-2px, -2px); box-shadow: 5px 5px 0px var(--black); }
-.neo-icon-btn.red-bg { background: var(--neo-red); color: white; }
-.neo-icon-btn.red-bg:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0px var(--black); }
-.neo-icon-btn:active { transform: translate(2px, 2px) !important; box-shadow: 0px 0px 0px var(--black) !important; }
+.control-btns { display: flex; gap: 10px; }
+.q-icon-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.1); color: var(--text-secondary); transition: 0.3s; border: none; cursor: pointer; }
+.q-icon-btn:hover { background: var(--liquid-accent); color: #000; box-shadow: 0 0 15px var(--liquid-accent); }
+.q-icon-btn.delete:hover { background: var(--danger); color: white; box-shadow: 0 0 15px var(--danger); }
 
 /* =========================================
-   MODAL (Aviso Estilo "Erro de Sistema")
+   MODAL ESPACIAL
    ========================================= */
-.neo-modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(244, 244, 240, 0.8); /* Fundo claro semi-transparente */
-    z-index: 10000; display: flex; justify-content: center; align-items: center;
-    opacity: 0; pointer-events: none; transition: 0.2s;
-}
+.spatial-modal-overlay { position: fixed; inset: 0; z-index: 999; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: 0.3s; }
+.spatial-modal-overlay.active { opacity: 1; pointer-events: auto; }
+.modal-window { position: relative; transform: scale(0.9) translateZ(-100px) !important; opacity: 0 !important; transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.spatial-modal-overlay.active .modal-window { transform: scale(1) translateZ(0px) !important; opacity: 1 !important; }
+.box-danger { background: rgba(255, 46, 91, 0.2); border-color: var(--danger); }
+.box-danger .window-title { color: var(--danger); }
+.text-center { text-align: center; }
+.danger-icon { font-size: 3rem; margin-bottom: 1rem; }
+.modal-heading { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.modal-desc { color: var(--text-secondary); margin-bottom: 2rem; }
+.modal-actions { display: flex; gap: 15px; }
+.modal-actions .quantum-btn { flex: 1; clip-path: none; border-radius: 8px; margin-top: 0; }
+.quantum-btn.secondary { background: transparent; border: 1px solid var(--glass-border); color: var(--text-primary); }
+.quantum-btn.secondary:hover { background: rgba(255,255,255,0.1); }
+.quantum-btn.danger { background: var(--danger); color: white; }
+.quantum-btn.danger:hover { background: #D1244A; box-shadow: 0 0 20px var(--danger); }
 
-.neo-modal-overlay.active { opacity: 1; pointer-events: auto; }
-
-.modal-content {
-    max-width: 500px; width: 90%; text-align: center;
-    transform: translateY(50px); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.neo-modal-overlay.active .modal-content { transform: translateY(0); }
-
-.modal-content h2 { font-size: 2.5rem; font-weight: 900; color: var(--neo-red); margin-bottom: 1rem; border-bottom: var(--border-thick); padding-bottom: 10px; }
-.modal-content p { font-family: 'Space Mono', monospace; font-size: 1rem; line-height: 1.5; margin-bottom: 2rem; font-weight: 700; }
-
-.modal-buttons { display: flex; gap: 1rem; }
-.modal-buttons button { flex: 1; }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }

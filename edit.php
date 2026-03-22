@@ -16,52 +16,56 @@ if (!$user) die("Aluno não encontrado.");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA // Editar Registro</title>
+    <title>QUANTUM OS // Configuração</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@500;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="marquee-container">
-        <div class="marquee-content">
-            <span>MODO DE EDIÇÃO ATIVADO • CUIDADO AO ALTERAR DADOS • MODO DE EDIÇÃO ATIVADO • CUIDADO AO ALTERAR DADOS • </span>
-            <span>MODO DE EDIÇÃO ATIVADO • CUIDADO AO ALTERAR DADOS • MODO DE EDIÇÃO ATIVADO • CUIDADO AO ALTERAR DADOS • </span>
-        </div>
+    <div class="liquid-desktop">
+        <div class="liquid-blob blob-1" style="top: -20%; left: -10%;"></div>
+        <div class="liquid-blob blob-3" style="bottom: -20%; right: -10%;"></div>
     </div>
+    <div class="noise-overlay"></div>
 
-    <div class="main-wrapper" style="display: flex; justify-content: center; min-height: 80vh; align-items: center;">
+    <div class="desktop-environment" style="display: flex; align-items: center; justify-content: center; padding: 0;">
         
-        <div class="neo-box pink-shadow" style="width: 100%; max-width: 600px;">
-            <div class="box-title">
-                <h2>MODIFICAR MATRIZ</h2>
-                <span class="mono-badge">ID: #<?= str_pad($user["id"], 3, '0', STR_PAD_LEFT) ?></span>
+        <div class="spatial-window active" style="position: relative; width: 500px; transform: translateZ(0) scale(1); opacity: 1;">
+            <div class="window-bar">
+                <div class="window-controls">
+                    <span class="win-btn close-btn" style="background:rgba(255,255,255,0.2)"></span>
+                </div>
+                <span class="window-title mono">MODO DE RECONFIGURAÇÃO :: UID #<?= $user["id"] ?></span>
             </div>
+            <div class="window-content">
+                
+                <form action="update.php" method="post" class="quantum-form">
+                    <input type="hidden" name="id" value="<?= $user["id"] ?>">
 
-            <form action="update.php" method="post" class="brutalist-form">
-                <input type="hidden" name="id" value="<?= $user["id"] ?>">
-
-                <div class="input-block">
-                    <label>NOME DO OPERADOR</label>
-                    <input type="text" name="name" value="<?= htmlspecialchars($user["name"]) ?>" required>
-                </div>
-
-                <div class="input-block">
-                    <label>E-MAIL DE CONTATO</label>
-                    <input type="email" name="email" value="<?= htmlspecialchars($user["email"]) ?>" required>
-                </div>
-
-                <div class="input-block">
-                    <label>CURSO VINCULADO</label>
-                    <input type="text" name="document" value="<?= htmlspecialchars($user["document"]) ?>" required>
-                </div>
-
-                <div class="modal-buttons" style="margin-top: 1rem;">
-                    <a href="index.php" class="neo-btn white-btn" style="flex: 1; text-align: center;">ABORTAR</a>
-                    <button type="submit" class="neo-btn green-btn" style="flex: 1;">SALVAR DADOS</button>
-                </div>
-            </form>
+                    <div class="q-input-group">
+                        <label>IDENTIFICAÇÃO DO OPERADOR</label>
+                        <input type="text" name="name" value="<?= htmlspecialchars($user["name"]) ?>" required>
+                        <span class="input-focus-line"></span>
+                    </div>
+                    <div class="q-input-group">
+                        <label>CANAL DE COMUNICAÇÃO</label>
+                        <input type="email" name="email" value="<?= htmlspecialchars($user["email"]) ?>" required>
+                        <span class="input-focus-line"></span>
+                    </div>
+                    <div class="q-input-group">
+                        <label>VETOR DE ACESSO</label>
+                        <input type="text" name="document" value="<?= htmlspecialchars($user["document"]) ?>" required>
+                        <span class="input-focus-line"></span>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 10px;">
+                        <a href="index.php" class="quantum-btn secondary" style="flex: 1; text-align: center; text-decoration: none; clip-path: none; border-radius: 8px;">CANCELAR</a>
+                        <button type="submit" class="quantum-btn primary" style="flex: 1; clip-path: none; border-radius: 8px;">SALVAR ALTERAÇÕES</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
     </div>

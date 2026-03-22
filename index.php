@@ -11,114 +11,128 @@ $users = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA // Neo-Brutalist</title>
+    <title>QUANTUM OS // Spatial Interface</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@500;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="marquee-container">
-        <div class="marquee-content">
-            <span>SISTEMA DE GESTÃO MATRICULAR • BASE DE DADOS ONLINE • CRUD OPERATIONS • SISTEMA DE GESTÃO MATRICULAR • BASE DE DADOS ONLINE • CRUD OPERATIONS • </span>
-            <span>SISTEMA DE GESTÃO MATRICULAR • BASE DE DADOS ONLINE • CRUD OPERATIONS • SISTEMA DE GESTÃO MATRICULAR • BASE DE DADOS ONLINE • CRUD OPERATIONS • </span>
-        </div>
+    <div class="liquid-desktop">
+        <div class="liquid-blob blob-1"></div>
+        <div class="liquid-blob blob-2"></div>
+        <div class="liquid-blob blob-3"></div>
     </div>
+    <div class="noise-overlay"></div>
 
-    <div class="main-wrapper">
+    <div class="desktop-environment">
         
-        <header class="neo-header neo-box">
-            <div class="brand-block">
-                <div class="black-square"></div>
-                <h1>DATA.BASE</h1>
-            </div>
-            <div class="stats-block">
-                <span class="mono-badge yellow-bg">REGISTROS: <?= str_pad(count($users), 3, '0', STR_PAD_LEFT) ?></span>
-            </div>
-        </header>
-
-        <div class="grid-layout">
-            
-            <aside class="neo-box form-box pink-shadow">
-                <div class="box-title">
-                    <h2>ENTRADA</h2>
-                    <span class="mono-badge">NOVO</span>
+        <div class="spatial-window app-input active" id="window-input" style="left: 10%; top: 15%; z-index: 2;">
+            <div class="window-bar cursor-grab">
+                <div class="window-controls">
+                    <span class="win-btn close-btn"></span>
+                    <span class="win-btn minimize-btn"></span>
                 </div>
-                
-                <form action="store.php" method="post" class="brutalist-form">
-                    <div class="input-block">
-                        <label>NOME DO OPERADOR</label>
-                        <input type="text" name="name" required placeholder="Digite o nome...">
+                <span class="window-title mono">TERMINAL DE ENTRADA v.4.0</span>
+            </div>
+            <div class="window-content">
+                <form action="store.php" method="post" class="quantum-form">
+                    <div class="q-input-group">
+                        <label>IDENTIFICAÇÃO DO OPERADOR</label>
+                        <input type="text" name="name" required placeholder="_Digite o nome completo">
+                        <span class="input-focus-line"></span>
                     </div>
-
-                    <div class="input-block">
-                        <label>E-MAIL DE CONTATO</label>
-                        <input type="email" name="email" required placeholder="exemplo@mail.com">
+                    <div class="q-input-group">
+                        <label>CANAL DE COMUNICAÇÃO (E-MAIL)</label>
+                        <input type="email" name="email" required placeholder="_Digite o e-mail corporativo">
+                        <span class="input-focus-line"></span>
                     </div>
-
-                    <div class="input-block">
-                        <label>CURSO VINCULADO</label>
-                        <input type="text" name="document" required placeholder="Sigla do curso...">
+                    <div class="q-input-group">
+                        <label>VETOR DE ACESSO (CURSO)</label>
+                        <input type="text" name="document" required placeholder="_Código do curso">
+                        <span class="input-focus-line"></span>
                     </div>
-
-                    <button type="submit" class="neo-btn green-btn">
-                        CADASTRAR DADOS 
-                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="3" fill="none"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    <button type="submit" class="quantum-btn primary">
+                        <span class="btn-txt">PROCESSAR DADOS</span>
+                        <div class="btn-glitch"></div>
                     </button>
                 </form>
-            </aside>
+            </div>
+        </div>
 
-            <main class="neo-box table-box blue-shadow">
-                <div class="box-title">
-                    <h2>MATRIZ DE USUÁRIOS</h2>
+        <div class="spatial-window app-data active" id="window-data" style="right: 5%; top: 10%; z-index: 3; width: 650px;">
+            <div class="window-bar cursor-grab">
+                <div class="window-controls">
+                    <span class="win-btn close-btn"></span>
+                    <span class="win-btn minimize-btn"></span>
                 </div>
-                
-                <div class="table-scroll">
-                    <table class="neo-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>OPERADOR</th>
-                                <th>E-MAIL</th>
-                                <th>CURSO</th>
-                                <th>AÇÕES</th>
+                <span class="window-title mono">VISUALIZADOR DE MATRIZ [Registros: <?= count($users) ?>]</span>
+            </div>
+            <div class="window-content scrollable">
+                <table class="quantum-table">
+                    <thead>
+                        <tr>
+                            <th>UID</th>
+                            <th>Operador / Contato</th>
+                            <th>Vetor</th>
+                            <th>Controle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($users as $index => $user) : ?>
+                            <tr style="animation-delay: <?= $index * 0.05 ?>s">
+                                <td class="mono-id">#<?= str_pad($user["id"], 3, '0', STR_PAD_LEFT) ?></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <span class="user-name"><?= htmlspecialchars($user["name"]) ?></span>
+                                        <span class="user-email mono"><?= htmlspecialchars($user["email"]) ?></span>
+                                    </div>
+                                </td>
+                                <td><span class="vector-badge"><?= htmlspecialchars($user["document"]) ?></span></td>
+                                <td>
+                                    <div class="control-btns">
+                                        <a href="edit.php?id=<?= $user["id"] ?>" class="q-icon-btn edit" title="Reconfigurar">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                        </a>
+                                        <button data-href="delete.php?id=<?= $user["id"] ?>" class="q-icon-btn delete custom-delete-trigger" title="Purgar">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($users as $index => $user) : ?>
-                                <tr>
-                                    <td class="font-mono"><strong>#<?= $user["id"] ?></strong></td>
-                                    <td class="heavy-text"><?= htmlspecialchars($user["name"]) ?></td>
-                                    <td><?= htmlspecialchars($user["email"]) ?></td>
-                                    <td><span class="neo-tag"><?= htmlspecialchars($user["document"]) ?></span></td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <a href="edit.php?id=<?= $user["id"] ?>" class="neo-icon-btn yellow-bg" title="Editar">
-                                                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                            </a>
-                                            <a href="delete.php?id=<?= $user["id"] ?>" class="neo-icon-btn red-bg custom-delete-btn" title="Excluir">
-                                                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </main>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
+    </div> <div class="dock-container">
+        <div class="quantum-dock">
+            <button class="dock-icon active" data-target="window-input" title="Terminal de Entrada">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                <div class="dock-glow"></div>
+            </button>
+            <button class="dock-icon active" data-target="window-data" title="Visualizador de Matriz">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                <div class="dock-glow"></div>
+            </button>
         </div>
     </div>
 
-    <div class="neo-modal-overlay" id="deleteModal">
-        <div class="neo-box modal-content red-shadow">
-            <h2>AVISO CRÍTICO</h2>
-            <p>Você tem certeza que deseja excluir este operador da base de dados? Isso não pode ser desfeito.</p>
-            <div class="modal-buttons">
-                <button class="neo-btn white-btn" id="btnCancelDelete">CANCELAR</button>
-                <button class="neo-btn red-btn" id="btnConfirmDelete">EXCLUIR</button>
+    <div class="spatial-modal-overlay" id="deleteModal">
+        <div class="spatial-window modal-window">
+             <div class="window-bar box-danger">
+                <span class="window-title mono">ALERTA DE SISTEMA CRÍTICO</span>
+            </div>
+            <div class="window-content text-center">
+                <div class="danger-icon">⚠️</div>
+                <h3 class="modal-heading">Confirmar Purga de Dados?</h3>
+                <p class="modal-desc">Esta operação é irreversível e removerá permanentemente o registro da matriz quântica.</p>
+                <div class="modal-actions">
+                    <button class="quantum-btn secondary" id="btnCancelDelete">CANCELAR OPERAÇÃO</button>
+                    <button class="quantum-btn danger" id="btnConfirmDelete">CONFIRMAR PURGA</button>
+                </div>
             </div>
         </div>
     </div>
