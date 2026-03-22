@@ -128,9 +128,9 @@
                             <select id="layout-selector" class="neo-select">
                                 <option value="omni">OMNI (Corporativo Sênior)</option>
                                 <option value="aegis">AEGIS (Tático Hacker)</option>
+                                <option value="quantum">QUANTUM (Spatial OS)</option>
                             </select>
                         </div>
-
                     </div>
 
                     <div class="bionic-card form-card" style="max-width:100%">

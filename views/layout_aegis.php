@@ -161,6 +161,7 @@
                                 <select id="layout-selector" class="hud-select" style="border-color: var(--danger); color: var(--danger);">
                                     <option value="aegis">AEGIS (Tático Hacker)</option>
                                     <option value="omni">OMNI (Corporativo Sênior)</option>
+                                    <option value="quantum">QUANTUM (Spatial OS)</option>
                                 </select>
                             </div>
                         </div>
