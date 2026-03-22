@@ -1,440 +1,379 @@
 /* =========================================
-   VARIÁVEIS DE TEMA (LibreTV Inspired)
+   CONFIGURAÇÕES GERAIS E CORES
    ========================================= */
    :root {
-    --bg-dark: #080c14;
-    --panel-bg: rgba(16, 23, 38, 0.55);
-    --panel-border: rgba(0, 229, 255, 0.15);
+    --bg-deep: #030508;
+    --glass-bg: rgba(10, 15, 26, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.08);
     
-    --cyan: #00e5ff;
-    --cyan-glow: rgba(0, 229, 255, 0.4);
-    --magenta: #ff007f;
-    --magenta-glow: rgba(255, 0, 127, 0.4);
+    --cyan: #00f3ff;
+    --cyan-dim: rgba(0, 243, 255, 0.2);
+    --purple: #b026ff;
+    --purple-dim: rgba(176, 38, 255, 0.2);
     
-    --text-main: #f0f4f8;
-    --text-muted: #8a9bb3;
-    
-    --tr-bg: rgba(255, 255, 255, 0.03);
-    --tr-hover: rgba(0, 229, 255, 0.08);
+    --text-main: #f8fafc;
+    --text-muted: #8b9bb4;
 }
 
-/* =========================================
-   RESET E SCROLLBAR CUSTOMIZADA
-   ========================================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Outfit', sans-serif;
+    /* Remove o cursor padrão do sistema em todos os elementos */
+    cursor: none !important; 
 }
 
 body {
-    background-color: var(--bg-dark);
+    background-color: var(--bg-deep);
     color: var(--text-main);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow-x: hidden;
-    selection-background: var(--magenta);
-    selection-color: white;
 }
 
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--bg-dark); }
-::-webkit-scrollbar-thumb { background: #2a3b52; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+/* =========================================
+   CURSOR HOLOGRÁFICO (O Diferencial)
+   ========================================= */
+.cursor-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--cyan);
+    position: fixed;
+    top: 0; left: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    z-index: 9999;
+    pointer-events: none;
+    box-shadow: 0 0 10px var(--cyan);
+}
+
+.cursor-outline {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--cyan-dim);
+    position: fixed;
+    top: 0; left: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    z-index: 9998;
+    pointer-events: none;
+    transition: width 0.2s, height 0.2s, border-color 0.2s;
+    box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.1);
+}
+
+/* Quando passa por cima de botões/links, o cursor cresce */
+a:hover ~ .cursor-outline,
+button:hover ~ .cursor-outline,
+.magnetic-btn:hover ~ .cursor-outline {
+    width: 60px;
+    height: 60px;
+    border-color: var(--cyan);
+    background-color: rgba(0, 243, 255, 0.05);
+}
 
 /* =========================================
-   FUNDO HOLOGRÁFICO (As Luzes do Fundo)
+   FUNDO 3D & PARTÍCULAS EM ROTAÇÃO
    ========================================= */
-.hologram-bg {
+.quantum-bg {
     position: fixed;
     inset: 0;
     z-index: -1;
     overflow: hidden;
-    background: radial-gradient(circle at center, #0e1525 0%, var(--bg-dark) 100%);
+    perspective: 800px;
 }
 
-.ambient-light {
+.glow-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.5;
-    animation: floatLight 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+    filter: blur(150px);
+    opacity: 0.4;
+    animation: breathe 10s infinite alternate;
 }
 
-.light-cyan {
-    width: 50vw;
-    height: 50vw;
+.cyan-orb { width: 60vw; height: 60vw; background: var(--cyan); top: -20%; left: -20%; }
+.purple-orb { width: 50vw; height: 50vw; background: var(--purple); bottom: -20%; right: -10%; animation-delay: -5s; }
+
+/* O Sistema de Partículas que você mandou na referência */
+.particle-system {
+    position: absolute;
+    top: 50%; left: 50%;
+    z-index: 0;
+    transform-style: preserve-3d;
+    animation: rotateGalaxy 30s linear infinite;
+}
+
+.particle {
+    display: block;
+    position: absolute;
+    width: 6px; height: 6px;
+    border-radius: 50%;
     background: var(--cyan);
-    top: -10%;
-    left: -10%;
+    box-shadow: 0 0 15px var(--cyan);
+    opacity: 0;
+    /* A mágica do 3D spin da sua referência */
+    animation: particleSpin 3s ease-in-out infinite;
 }
 
-.light-magenta {
-    width: 40vw;
-    height: 40vw;
-    background: var(--magenta);
-    bottom: -10%;
-    right: -10%;
-    animation-delay: -5s;
+@keyframes particleSpin {
+    0% { opacity: 0; }
+    50% { opacity: 0.6; transform: translate3d(-3px, -3px, 570px); }
+    100% { opacity: 0; }
 }
 
-@keyframes floatLight {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(100px, 50px) scale(1.2); }
+@keyframes rotateGalaxy {
+    0% { transform: rotateZ(0deg) rotateX(60deg); }
+    100% { transform: rotateZ(360deg) rotateX(60deg); }
+}
+@keyframes breathe {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.1); opacity: 0.6; }
 }
 
 /* =========================================
-   LAYOUT PRINCIPAL (GRID)
+   LAYOUT E GLASSMORPHISM
    ========================================= */
-.dashboard-wrapper {
+.layout-wrapper {
     width: 100%;
-    max-width: 1300px;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+    max-width: 1400px;
+    padding: 2vw;
     z-index: 1;
 }
 
-.content-grid {
-    display: grid;
-    grid-template-columns: 350px 1fr; /* Esquerda menor, direita maior */
-    gap: 30px;
-    align-items: start;
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
-/* Telas menores */
-@media (max-width: 992px) {
-    .content-grid { grid-template-columns: 1fr; }
+.main-grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+@media (max-width: 1100px) {
+    .main-grid { grid-template-columns: 1fr; }
 }
 
 /* =========================================
    CABEÇALHO
    ========================================= */
-.sys-header {
+.cyber-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--panel-border);
-    padding-bottom: 20px;
+    padding: 20px 40px;
 }
 
-.sys-logo {
+.brand {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
-.sys-logo svg {
-    color: var(--cyan);
-    filter: drop-shadow(0 0 8px var(--cyan-glow));
-}
-
-h1 {
-    font-size: 2rem;
-    font-weight: 800;
-    letter-spacing: 2px;
-}
-
-.gradient-text {
-    background: linear-gradient(to right, var(--cyan), var(--magenta));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.sys-status {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.85rem;
-    color: var(--cyan);
-    letter-spacing: 1px;
-}
-
-.status-dot {
-    width: 8px;
-    height: 8px;
-    background-color: var(--cyan);
+.logo-spinner {
+    width: 25px; height: 25px;
+    border: 3px solid transparent;
+    border-top-color: var(--cyan);
+    border-left-color: var(--purple);
     border-radius: 50%;
-    box-shadow: 0 0 10px var(--cyan);
-    animation: blink 2s infinite;
+    animation: spin 1s linear infinite;
 }
 
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+h1 { font-size: 2rem; font-weight: 800; letter-spacing: 3px; }
+.highlight { color: var(--cyan); font-weight: 300; }
+
+.sys-metrics { display: flex; gap: 30px; }
+.metric { display: flex; flex-direction: column; text-align: right; }
+.metric-label { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 2px; }
+.metric-value { font-size: 1.2rem; font-weight: 800; font-family: 'Space Mono', monospace; }
+.text-cyan { color: var(--cyan); text-shadow: 0 0 10px var(--cyan-dim); }
+.text-purple { color: var(--purple); text-shadow: 0 0 10px var(--purple-dim); }
+.blink { animation: blinker 2s linear infinite; }
+@keyframes blinker { 50% { opacity: 0.3; } }
 
 /* =========================================
-   PAINÉIS DE VIDRO (Glassmorphism)
+   ENTRADA DE DADOS (O FORMULÁRIO)
    ========================================= */
-.glass-panel {
-    background: var(--panel-bg);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border: 1px solid var(--panel-border);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
-}
+.input-station { padding: 40px; }
+.panel-heading h2 { font-size: 1.4rem; font-weight: 600; letter-spacing: 1px; }
+.panel-heading p { color: var(--text-muted); font-size: 0.9rem; margin-top: 5px; margin-bottom: 35px; }
 
-.panel-header h2 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: white;
-    letter-spacing: 1px;
-}
+.futuristic-form { display: flex; flex-direction: column; gap: 35px; }
 
-.panel-header p {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: 5px;
-    margin-bottom: 25px;
-}
-
-/* =========================================
-   FORMULÁRIO (INPUTS FLUTUANTES)
-   ========================================= */
-.neon-form {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-.input-group {
-    position: relative;
-}
-
-.input-group input {
+.input-box { position: relative; }
+.input-box input {
     width: 100%;
     background: transparent;
     border: none;
     color: white;
-    font-size: 1rem;
+    font-size: 1.1rem;
     padding: 10px 0;
     outline: none;
 }
 
-.input-line {
+.scanner-line {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.2);
-    transition: 0.3s;
+    bottom: 0; left: 0;
+    width: 100%; height: 2px;
+    background: rgba(255,255,255,0.1);
 }
 
-.input-line::after {
+.scanner-line::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0%;
-    height: 2px;
-    background: var(--cyan);
+    bottom: 0; left: 50%;
+    width: 0%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
     transition: 0.4s ease;
+    transform: translateX(-50%);
 }
 
-.input-group label {
+.input-box label {
     position: absolute;
-    left: 0;
-    top: 10px;
+    left: 0; top: 10px;
     color: var(--text-muted);
-    font-size: 1rem;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
     pointer-events: none;
-    transition: 0.3s ease;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* A Mágica do Input */
-.input-group input:focus ~ label,
-.input-group input:valid ~ label {
-    top: -15px;
-    font-size: 0.75rem;
+.input-box input:focus ~ label,
+.input-box input:valid ~ label {
+    top: -20px;
+    font-size: 0.7rem;
     color: var(--cyan);
 }
 
-.input-group input:focus ~ .input-line::after,
-.input-group input:valid ~ .input-line::after {
+.input-box input:focus ~ .scanner-line::after,
+.input-box input:valid ~ .scanner-line::after {
     width: 100%;
-    box-shadow: 0 0 10px var(--cyan-glow);
+    box-shadow: 0 0 15px var(--cyan);
 }
 
-/* Botão 3D e Brilhante */
-.btn-3d-submit {
-    margin-top: 10px;
+/* BOTÃO MAGNÉTICO E CIBERNÉTICO */
+.cyber-btn {
     position: relative;
-    background: linear-gradient(135deg, #00b4cc, #0066ff);
-    border: none;
-    border-radius: 8px;
-    padding: 15px;
-    color: white;
+    background: rgba(0, 243, 255, 0.05);
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    padding: 18px;
+    font-size: 0.95rem;
     font-weight: 800;
-    letter-spacing: 1px;
-    cursor: pointer;
+    letter-spacing: 3px;
+    border-radius: 12px;
     overflow: hidden;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+    transition: 0.2s ease-out; /* Transição rápida para combinar com a física do JS */
 }
 
-.btn-3d-submit:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(0, 229, 255, 0.5);
+.cyber-btn:hover {
+    background: var(--cyan);
+    color: var(--bg-deep);
+    box-shadow: 0 0 30px var(--cyan-dim);
 }
 
-.btn-3d-submit:active {
-    transform: translateY(2px);
-}
-
-/* Efeito de Reflexo no botão */
-.btn-glare {
+.btn-flare {
     position: absolute;
-    top: 0;
-    left: -150%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    transform: skewX(-20deg);
-    transition: 0.5s;
+    top: 0; left: -100%;
+    width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    transform: skewX(-25deg);
+    transition: 0.6s;
 }
-
-.btn-3d-submit:hover .btn-glare {
-    left: 150%;
-}
+.cyber-btn:hover .btn-flare { left: 200%; }
 
 /* =========================================
-   A TABELA 3D (PERSPECTIVA)
+   TABELA 3D (PERSPECTIVA AVANÇADA)
    ========================================= */
-.flex-between {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
+.data-station { padding: 40px; perspective: 1500px; }
 
-.data-counter {
-    background: rgba(255, 0, 127, 0.15);
-    color: var(--magenta);
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 800;
-    border: 1px solid rgba(255, 0, 127, 0.3);
-}
+.table-container { overflow-x: auto; padding-bottom: 20px; }
 
-/* Container que cria o mundo 3D para as linhas da tabela */
-.perspective-container {
-    perspective: 1200px; 
-    overflow-x: auto;
-}
-
-.data-table {
+.perspective-table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 8px; /* Espaço entre os "cards" */
+    border-spacing: 0 12px;
+    transform-style: preserve-3d;
 }
 
-.data-table th {
+.perspective-table th {
     text-align: left;
     color: var(--text-muted);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 2px;
-    padding: 0 20px 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 0 20px 15px;
 }
 
-.data-table tbody tr {
-    background: var(--tr-bg);
-    transform-style: preserve-3d;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Curva suave das referências */
-    
-    /* Animação de entrada de baixo para cima */
-    animation: tableRowEntrance 0.6s backwards;
+.data-row {
+    background: rgba(255,255,255,0.02);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Animação de entrada de baixo para cima das referências Animate.css */
+    animation: fadeInUp 0.8s backwards;
 }
 
-@keyframes tableRowEntrance {
-    from { opacity: 0; transform: translateY(20px) rotateX(-10deg); }
-    to { opacity: 1; transform: translateY(0) rotateX(0); }
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translate3d(0, 40px, -50px) rotateX(-10deg); }
+    to { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0); }
 }
 
-.data-table td {
-    padding: 15px 20px;
-    font-size: 0.95rem;
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;
+.data-row td {
+    padding: 18px 20px;
+    border-top: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
     transition: 0.3s;
 }
 
-/* Borda arredondada nas laterais de cada linha */
-.data-table td:first-child { border-radius: 10px 0 0 10px; border-left: 2px solid transparent; }
-.data-table td:last-child { border-radius: 0 10px 10px 0; border-right: 2px solid transparent; }
+.data-row td:first-child { border-left: 1px solid var(--glass-border); border-radius: 12px 0 0 12px; }
+.data-row td:last-child { border-right: 1px solid var(--glass-border); border-radius: 0 12px 12px 0; }
 
-/* O EFEITO HOVER 3D NA LINHA */
-.data-table tbody tr:hover {
-    background: var(--tr-hover);
-    /* Levanta a linha na direção da tela */
-    transform: translateZ(25px) scale(1.02);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+/* O Hover 3D que salta na tela */
+.data-row:hover {
+    background: rgba(0, 243, 255, 0.05);
+    transform: translateZ(40px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
 }
 
-.data-table tbody tr:hover td {
-    border-top: 1px solid var(--panel-border);
-    border-bottom: 1px solid var(--panel-border);
-}
-.data-table tbody tr:hover td:first-child { border-left: 2px solid var(--cyan); }
-.data-table tbody tr:hover td:last-child { border-right: 2px solid var(--cyan); }
-
-/* Detalhes do Texto na Tabela */
-.uid-tag {
-    color: var(--text-muted);
-    font-family: monospace;
-    font-size: 0.85rem;
+.data-row:hover td {
+    border-color: var(--cyan-dim);
 }
 
-.primary-text { font-weight: 600; color: white; }
-.muted-text { color: var(--text-muted); font-size: 0.85rem; }
+.id-tag { color: var(--text-muted); font-family: 'Space Mono', monospace; }
+.operator-name { font-weight: 600; font-size: 1.05rem; }
+.text-dimmed { color: var(--text-muted); font-size: 0.9rem; }
+.font-mono { font-family: 'Space Mono', monospace; }
 
-.course-tag {
-    background: rgba(0, 229, 255, 0.1);
-    color: var(--cyan);
-    padding: 4px 10px;
-    border-radius: 6px;
+.course-badge {
+    background: var(--purple-dim);
+    color: #e599ff;
+    padding: 6px 12px;
+    border-radius: 8px;
     font-size: 0.75rem;
     letter-spacing: 1px;
-    border: 1px solid rgba(0, 229, 255, 0.2);
+    border: 1px solid rgba(176, 38, 255, 0.3);
 }
 
-/* =========================================
-   BOTÕES DE AÇÃO (EDITAR / EXCLUIR)
-   ========================================= */
-.action-buttons {
-    display: flex;
-    gap: 10px;
-}
+/* BOTÕES DE AÇÃO NA TABELA */
+.actions { display: flex; gap: 12px; }
 
-.btn-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
+.action-icon {
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    border-radius: 10px;
     background: rgba(255, 255, 255, 0.05);
     color: var(--text-muted);
     transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.btn-icon.edit:hover {
-    background: rgba(0, 229, 255, 0.2);
-    color: var(--cyan);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px var(--cyan-glow);
-}
-
-.btn-icon.delete:hover {
-    background: rgba(255, 0, 127, 0.2);
-    color: var(--magenta);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px var(--magenta-glow);
-}
+.edit-icon:hover { background: var(--cyan-dim); color: var(--cyan); transform: translateY(-4px) translateZ(20px); }
+.delete-icon:hover { background: rgba(255, 60, 120, 0.2); color: #ff3c78; transform: translateY(-4px) translateZ(20px); }
