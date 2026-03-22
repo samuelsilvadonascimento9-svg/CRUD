@@ -1,133 +1,94 @@
 <?php
-
-/**
- * Inclui o arquivo de conexão com o banco de dados.
- *
- * __DIR__ retorna o diretório atual do arquivo,
- * o que evita problemas de caminho relativo.
- */
 require __DIR__ . "/connect.php";
 
-/**
- * Obtém a instância da conexão com o banco.
- * Esse método foi definido na classe Connect.
- */
 $pdo = Connect::getInstance();
-
-/**
- * Executa uma consulta SQL para buscar todos os usuários
- * da tabela "users", ordenando pelo campo "id" em ordem crescente.
- *
- * query() é usado quando não há parâmetros dinâmicos.
- */
 $stmt = $pdo->query("SELECT * FROM users ORDER BY id ASC");
-
-/**
- * fetchAll() busca todos os registros retornados pela consulta
- * e os armazena em um array.
- */
 $users = $stmt->fetchAll();
-
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
-    <title>CRUD PHP</title>
+    <title>SISTEMA // ALUNOS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <h1>Cadastro de Alunos</h1>
+    <div class="bg-abstract">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
 
-    <!--
-        Formulário responsável por enviar os dados
-        para o arquivo store.php, que fará o cadastro no banco.
+    <div class="container">
         
-        method="post" é usado para envio de dados de formulário
-        de forma mais apropriada e segura do que GET.
-    -->
-    <form action="store.php" method="post">
-        <p>
-            <label>Nome:</label><br>
-            <input type="text" name="nomecompleto" required>
-        </p>
+        <header class="header-glass">
+            <h1><span class="neon-dot">::</span> DATA_BASE <span class="neon-text">ALUNOS</span></h1>
+            <p>SISTEMA DE GERENCIAMENTO DE MATRÍCULAS</p>
+        </header>
 
-        <p>
-            <label>E-mail:</label><br>
-            <input type="email" name="email" required>
-        </p>
+        <section class="glass-panel">
+            <h2 class="section-title">NOVO REGISTRO</h2>
+            <form action="store.php" method="post" class="cyber-form">
+                <div class="input-wrapper">
+                    <input type="text" name="name" required placeholder=" ">
+                    <label>NOME DO OPERADOR</label>
+                </div>
 
-        <p>
-            <label>Curso:</label><br>
-            <input type="text" name="document" required>
-        </p>
+                <div class="input-wrapper">
+                    <input type="email" name="email" required placeholder=" ">
+                    <label>ENDEREÇO DE E-MAIL</label>
+                </div>
 
-        <button type="submit">Cadastrar</button>
-    </form>
+                <div class="input-wrapper">
+                    <input type="text" name="document" required placeholder=" ">
+                    <label>CURSO VINCULADO</label>
+                </div>
 
-    <hr>
+                <button type="submit" class="btn-neon">INICIALIZAR CADASTRO</button>
+            </form>
+        </section>
 
-    <h2>Lista de alunos</h2>
+        <section class="glass-panel">
+            <div class="table-header">
+                <h2 class="section-title">REGISTROS ATIVOS</h2>
+                <span class="badge-count">TOTAL: <?= count($users) ?></span>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>UID</th>
+                            <th>IDENTIFICAÇÃO</th>
+                            <th>E-MAIL</th>
+                            <th>CURSO</th>
+                            <th>DATA DE ACESSO</th>
+                            <th>COMANDOS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($users as $user) : ?>
+                            <tr>
+                                <td><span class="id-badge">#<?= $user["id"] ?></span></td>
+                                <td class="fw-bold text-white"><?= htmlspecialchars($user["name"]) ?></td>
+                                <td><?= htmlspecialchars($user["email"]) ?></td>
+                                <td><span class="tag-curso"><?= htmlspecialchars($user["document"]) ?></span></td>
+                                <td class="text-muted"><?= date("d/m/Y", strtotime($user["created_at"])) ?></td>
+                                <td class="actions-cell">
+                                    <a href="edit.php?id=<?= $user["id"] ?>" class="btn-action edit">EDITAR</a>
+                                    <a href="delete.php?id=<?= $user["id"] ?>" class="btn-action delete" onclick="return confirm('ALERTA: Confirmar exclusão do registro?')">EXCLUIR</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    <!--
-        Tabela que exibe os alunos cadastrados no banco de dados.
-        O atributo cellpadding adiciona espaçamento interno nas células.
-    -->
-    <table cellpadding="10">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>E-mail</th>
-                <th>Curso</th>
-                <th>Cadastrado em</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!--
-                foreach percorre todos os usuários retornados do banco.
-                A cada repetição, a variável $user representa um aluno.
-            -->
-            <?php foreach ($users as $user) : ?>
-                <tr>
-                    <td><?= $user["id"] ?></td>
-                    <td><?= $user["name"] ?></td>
-                    <td><?= $user["email"] ?></td>
-                    <td><?= $user["document"] ?></td>
-                    <td><?= date("d/m/Y H:i", strtotime($user["created_at"])) ?></td>
-                    <td>
-                        <!--
-                            Link para editar o aluno.
-                            O ID é enviado pela URL para que o arquivo edit.php
-                            saiba qual registro deve ser alterado.
-                        -->
-                        <a href="edit.php?id=<?= $user["id"] ?>">Editar</a> |
-
-                        <!--
-                            Link para excluir o aluno.
-                            O onclick chama uma confirmação em JavaScript
-                            antes de seguir para a exclusão.
-                        -->
-                        <a href="delete.php?id=<?= $user["id"] ?>" onclick="return confirm('Tem certeza que deseja excluir este aluno?')">Excluir</a>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-        <tfoot>
-            <tr>
-                <!--
-                    colspan="6" faz a célula ocupar as 6 colunas da tabela.
-                    count($users) conta quantos alunos existem no array.
-                -->
-                <td colspan="6">Total de alunos: <?= count($users) ?></td>
-            </tr>
-        </tfoot>
-    </table>
-
+    </div>
 </body>
-
 </html>
