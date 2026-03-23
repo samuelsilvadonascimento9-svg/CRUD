@@ -1,21 +1,21 @@
 <?php
 
 /**
+ * Inicia a sessão do PHP apenas se ela ainda não existir.
+ * Isso evita o erro "Notice: session_start(): Ignoring session_start()".
+ * A sessão é essencial para podermos salvar as mensagens de Sucesso/Erro (Toasts)
+ * e exibi-las na tela após o redirecionamento.
+ */
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+/**
  * Classe responsável por criar e fornecer
- * uma conexão com o banco de dados.
+ * uma conexão com o banco de dados de forma segura.
  */
 class Connect
 {
-    /**
-     * Constantes com os dados de conexão.
-     * Como são constantes da classe, seus valores
-     * não podem ser alterados em tempo de execução.
-     */
-    private const HOST = "localhost";
-    private const DBNAME = "aula01";
-    private const USER = "root";
-    private const PASS = "";
-
     /**
      * Retorna uma única instância de conexão com o banco.
      *
@@ -39,44 +39,44 @@ class Connect
          * Se ainda não existe conexão, cria uma nova.
          */
         if ($instance === null) {
+            
+            /**
+             * LENDO O ARQUIVO .ENV (Segurança Nível Sênior)
+             * Em vez de usar constantes expostas no código, lemos as credenciais
+             * de um arquivo externo que não é enviado para o repositório.
+             */
+            $envPath = __DIR__ . '/.env';
+            if (!file_exists($envPath)) {
+                die("Erro crítico: Arquivo .env não encontrado na raiz do sistema.");
+            }
+            $env = parse_ini_file($envPath);
+
             /**
              * DSN = Data Source Name
-             * É a string que informa ao PDO:
-             * - qual banco está sendo usado (mysql)
-             * - o host
-             * - o nome do banco
-             * - o charset
+             * Monta a string de conexão usando os dados do arquivo .env
              */
-            $dsn = "mysql:host=" . self::HOST . ";dbname=" . self::DBNAME . ";charset=utf8mb4";
+            $dsn = "mysql:host=" . $env['DB_HOST'] . ";dbname=" . $env['DB_NAME'] . ";charset=utf8mb4";
 
             /**
-             * Cria a conexão com o banco usando PDO.
-             *
-             * Parâmetros:
-             * 1. $dsn -> string com as informações da conexão
-             * 2. self::USER -> usuário do banco
-             * 3. self::PASS -> senha do banco
-             * 4. array de opções da conexão
+             * Cria a conexão com o banco usando PDO de forma segura.
              */
-            $instance = new PDO($dsn, self::USER, self::PASS, [
-                /**
-                 * Faz o PDO lançar exceções em caso de erro.
-                 * Isso facilita o tratamento de falhas.
-                 */
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            try {
+                $instance = new PDO($dsn, $env['DB_USER'], $env['DB_PASS'], [
+                    /**
+                     * Faz o PDO lançar exceções em caso de erro.
+                     * Isso facilita o tratamento de falhas.
+                     */
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 
-                /**
-                 * Define que os resultados das consultas serão
-                 * retornados como array associativo.
-                 *
-                 * Exemplo:
-                 * [
-                 *   "id" => 1,
-                 *   "nome" => "João"
-                 * ]
-                 */
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-            ]);
+                    /**
+                     * Define que os resultados das consultas serão
+                     * retornados como array associativo.
+                     */
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                ]);
+            } catch (PDOException $e) {
+                die("Falha na conexão com o Banco de Dados: " . $e->getMessage());
+            }
         }
 
         /**

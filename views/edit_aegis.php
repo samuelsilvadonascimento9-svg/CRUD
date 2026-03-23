@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AEGIS // Modify Entity</title>
+    <title>Portal Acadêmico // Modify Entity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/aegis.css">
 </head>
@@ -21,7 +23,7 @@
                 <h2 class="text-white" style="font-family: 'Rajdhani', sans-serif; font-size: 2rem;">// MODIFICAR DADOS DA ENTIDADE</h2>
             </div>
             
-            <form action="update.php" method="post" class="aegis-form" style="max-width: 100%;">
+            <form action="update.php" method="post" enctype="multipart/form-data" class="aegis-form" style="max-width: 100%;">
                 <input type="hidden" name="id" value="<?= $user["id"] ?>">
 
                 <div class="hud-input-group">
@@ -36,9 +38,37 @@
                     <div class="crosshair ch-tl"></div><div class="crosshair ch-br"></div>
                 </div>
 
+                <div style="display: flex; gap: 15px;">
+                    <div class="hud-input-group" style="flex: 1;">
+                        <label>> CPF</label>
+                        <input type="text" name="cpf" id="editCpf" value="<?= htmlspecialchars($user["cpf"] ?? '') ?>" required autocomplete="off">
+                        <div class="crosshair ch-tl"></div><div class="crosshair ch-br"></div>
+                    </div>
+                    <div class="hud-input-group" style="flex: 1;">
+                        <label>> CELULAR</label>
+                        <input type="text" name="phone" id="editPhone" value="<?= htmlspecialchars($user["phone"] ?? '') ?>" required autocomplete="off">
+                        <div class="crosshair ch-tl"></div><div class="crosshair ch-br"></div>
+                    </div>
+                </div>
+
                 <div class="hud-input-group">
                     <label>> CHAVE_VETOR (CURSO)</label>
-                    <input type="text" name="document" value="<?= htmlspecialchars($user["document"]) ?>" required autocomplete="off">
+                    <select name="document" class="hud-select" required>
+                        <?php
+                        $cursos = ['Engenharia de Computação', 'Ciência da Computação', 'Sistemas de Informação', 'Segurança da Informação'];
+                        foreach($cursos as $c) {
+                            $selected = ($user['document'] == $c) ? 'selected' : '';
+                            $label = strtoupper(str_replace(' ', '_', $c));
+                            echo "<option value=\"$c\" $selected>$label</option>";
+                        }
+                        ?>
+                    </select>
+                    <div class="crosshair ch-tl"></div><div class="crosshair ch-br"></div>
+                </div>
+
+                <div class="hud-input-group">
+                    <label>> SCAN_BIOMETRICO_NOVO (FOTO OPCIONAL)</label>
+                    <input type="file" name="avatar" accept="image/png, image/jpeg, image/webp" class="hud-select" style="padding: 9px;">
                     <div class="crosshair ch-tl"></div><div class="crosshair ch-br"></div>
                 </div>
 
@@ -55,6 +85,17 @@
 
     </div>
 
-    <script src="assets/js/aegis.js"></script>
+    <script>
+        document.getElementById('editCpf').addEventListener('input', function (e) {
+            let v = e.target.value.replace(/\D/g, '');
+            v = v.replace(/(\d{3})(\d)/, '$1.$2'); v = v.replace(/(\d{3})(\d)/, '$1.$2'); v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            e.target.value = v.substring(0, 14);
+        });
+        document.getElementById('editPhone').addEventListener('input', function (e) {
+            let v = e.target.value.replace(/\D/g, '');
+            v = v.replace(/^(\d{2})(\d)/g, '($1) $2'); v = v.replace(/(\d)(\d{4})$/, '$1-$2');
+            e.target.value = v.substring(0, 15);
+        });
+    </script>
 </body>
 </html>
